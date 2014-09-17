@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<window width="848" height="480" />
+
+	<haxeflag name="-dce" value="no" />
+
+	<meta title="MediaMintpaw38F6BA060EBECB39DropboxAncientDomainMintPawGameFiles" package="com.example.mediamintpaw38f6ba060ebecb39dropboxancientdomainmintpawgamefiles" version="1.0.0" company="Company Name" />
+	<app main="Main" path="Export" file="MediaMintpaw38F6BA060EBECB39DropboxAncientDomainMintPawGameFiles" />
+	
+	<source path="Source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="hscript" />
+	<haxelib name="actuate" />
+
+	<assets path="Assets" rename="a" exclude="openfl.svg" />
+	<icon path="Assets/openfl.svg" />
+
+	<assets path="Assets">
+		<font path="font/main.ttf" id="main" />
+	</assets>
+	
+</project>
