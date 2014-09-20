@@ -4,6 +4,7 @@ import game.Passage;
 import haxe.Json;
 import openfl.Assets;
 import openfl.errors.Error;
+import game.GameEvent;
 
 class Reg
 {
@@ -28,14 +29,17 @@ class Reg
 
 			_passages.push(p);
 		}
+		
 	}
 
 	public static function getPassage(id:Int):Passage
 	{
 		for (i in 0..._passages.length) if (_passages[i].id == id) return _passages[i];
 		
-		throw new Error("Passage " + id + " doesn't exist");
+		throw new Error("Passage " + id + " does not exist");
 
 		return new Passage();
 	}
+
+	
 }

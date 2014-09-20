@@ -101,6 +101,9 @@ class GameState extends Sprite
 		_interp.variables.set("goBack", goBack);
 		_interp.variables.set("save", save);
 		_interp.variables.set("load", load);
+		_interp.variables.set("callEvent", callEvent);
+		_interp.variables.set("startEvent", GameEvent.startEvent);
+		_interp.variables.set("stopEvent", GameEvent.stopEvent);
 
 		for (i in _interp.variables.keys())
 		{
@@ -131,6 +134,19 @@ class GameState extends Sprite
 			trace("ERROR: " + e.getName());
 		}
 	}
+	
+	private function callEvent(id:Int):Void 
+	{
+		for (i in 0...Reg._gameEvents.length)
+			if (Reg._gameEvents[i].id == id)
+				runCode(Reg._gameEvents[i].triggerState);
+	}
+	
+	private function callEvents():Void {
+		for (i in 0...Reg._queuedEvents.length) {
+			runCode(Reg._queuedEvents[i].triggerState);
+		}
+	}
 
 	private function linkClicked(e:TextEvent):Void
 	{
@@ -143,7 +159,11 @@ class GameState extends Sprite
      	else if (e.delta > 0) _storyText.scrollV--;
 	}
 
-	private function refreshPassage():Void { _storyText.htmlText = _storyString; }
+	private function refreshPassage():Void {
+		
+		_storyText.htmlText = _storyString; 
+		
+	}
 
 	private function show(s:String):Void
 	{
