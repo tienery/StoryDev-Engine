@@ -102,8 +102,8 @@ class GameState extends Sprite
 		_interp.variables.set("save", save);
 		_interp.variables.set("load", load);
 		_interp.variables.set("callEvent", callEvent);
-		_interp.variables.set("startEvent", Reg.startEvent);
-		_interp.variables.set("stopEvent", Reg.stopEvent);
+		_interp.variables.set("startEvent", GameEvent.startEvent);
+		_interp.variables.set("stopEvent", GameEvent.stopEvent);
 
 		for (i in _interp.variables.keys())
 		{
