@@ -12,6 +12,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.TextEvent;
 import openfl.geom.Point;
+import openfl.net.SharedObject;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
@@ -27,6 +28,11 @@ class GameState extends Sprite
 
 	private var _parser:Parser;
 	private var _interp:Interp;
+
+	private var _currentPassage:Int = -1;
+	private var _lastPassage:Int = -1;
+
+	private var _startingKeys:Array<Dynamic> = [];
 	
 	public function new ()
 	{
@@ -78,6 +84,7 @@ class GameState extends Sprite
 		_parser = new Parser();
 		_interp = new Interp();
 
+		_interp.variables.set("show", show);
 		_interp.variables.set("appendShow", appendShow);
 		_interp.variables.set("gotoPassage", gotoPassage);
 		_interp.variables.set("appendLink", appendLink);
@@ -91,6 +98,14 @@ class GameState extends Sprite
 		_interp.variables.set("removeCharImage", removeCharImage);
 		_interp.variables.set("showBGImage", showBGImage);
 		_interp.variables.set("removeBGImage", removeBGImage);
+		_interp.variables.set("goBack", goBack);
+		_interp.variables.set("save", save);
+		_interp.variables.set("load", load);
+
+		for (i in _interp.variables.keys())
+		{
+			_startingKeys.push(i);
+		}
 	}
 
 	private function setupEvents():Void
@@ -98,8 +113,11 @@ class GameState extends Sprite
 		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 	}
 
-	private function gotoPassage(id:Int = 1):Void
+	private function gotoPassage(id:Int = 0):Void
 	{
+		if (_currentPassage != id) _lastPassage = _currentPassage; //Prevents refreshing wiping the _lastPassage
+		_currentPassage = id;
+
 		var passage:Passage = Reg.getPassage(id);
 		runCode(passage.text);
 	}
@@ -108,7 +126,6 @@ class GameState extends Sprite
 	{
 		try {
 			var prog = _parser.parseString(s);
-			_interp.variables.set("show", show);
 			_interp.execute(prog);
 		} catch (e:Error) {
 			trace("ERROR: " + e.getName());
@@ -126,7 +143,7 @@ class GameState extends Sprite
      	else if (e.delta > 0) _storyText.scrollV--;
 	}
 
-	private function refreshPassage():Void { _storyText.htmlText = _storyString;}
+	private function refreshPassage():Void { _storyText.htmlText = _storyString; }
 
 	private function show(s:String):Void
 	{
@@ -207,5 +224,47 @@ class GameState extends Sprite
 		Actuate.tween(_bgImage, 1, { alpha: 0 } );
 
 		_bgImage = null;
+	}
+
+	private function goBack():Void
+	{
+		gotoPassage(_lastPassage);
+		_lastPassage = -1;
+	}
+
+	private function save():Void
+	{
+		var saveString:String = "";
+		for (i in _interp.variables.keys())
+		{
+			if (_startingKeys.indexOf(i) == -1)
+			{
+				saveString += i + ":" + Std.string(_interp.variables.get(i)) + "|";
+			}
+		}
+
+		saveString = saveString.substr(0, saveString.length - 1);
+
+		var so:SharedObject = SharedObject.getLocal(Reg.title);
+
+		so.data.save = saveString;
+		so.flush();
+	}
+
+	private function load():Void
+	{
+		var so:SharedObject = SharedObject.getLocal(Reg.title);
+
+		var loadString:String = so.data.save;
+
+		var strings:Array<String> = loadString.split("|");
+
+		for (i in strings)
+		{
+			var action:Array<String> = i.split(":");
+			if (Std.parseFloat(action[1]) != Math.NaN) _interp.variables.set(action[0], Std.parseFloat(action[1])) else _interp.variables.set(action[0], action[1]);
+		}
+
+		save();
 	}
 }
