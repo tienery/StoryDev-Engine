@@ -54,6 +54,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("a/img/char0.png", AssetType.IMAGE);
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
+		className.set ("a/info/default.css", __ASSET__a_info_default_css);
+		type.set ("a/info/default.css", AssetType.TEXT);
 		className.set ("a/info/passages.json", __ASSET__a_info_passages_json);
 		type.set ("a/info/passages.json", AssetType.TEXT);
 		className.set ("a/sound/test.mp3", __ASSET__a_sound_test_mp3);
@@ -75,6 +77,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "a/info/commands.txt";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "a/info/default.css";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
 		id = "a/info/passages.json";
@@ -105,6 +110,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
+		
+		className.set ("a/info/default.css", __ASSET__a_info_default_css);
+		type.set ("a/info/default.css", AssetType.TEXT);
 		
 		className.set ("a/info/passages.json", __ASSET__a_info_passages_json);
 		type.set ("a/info/passages.json", AssetType.TEXT);
@@ -735,6 +743,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep class __ASSET__a_img_bg0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_img_char0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_info_commands_txt extends openfl.utils.ByteArray { }
+@:keep class __ASSET__a_info_default_css extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_passages_json extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_sound_test_mp3 extends openfl.media.Sound { }
 @:keep class __ASSET__assets_font_main_ttf extends openfl.text.Font { }
@@ -743,6 +752,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 #elseif html5
 
 @:keep class __ASSET__a_font_main_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main.ttf"; } #end }
+
 
 
 
@@ -758,6 +768,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:bitmap("Assets/img/bg0.png") class __ASSET__a_img_bg0_png extends flash.display.BitmapData {}
 @:bitmap("Assets/img/char0.png") class __ASSET__a_img_char0_png extends flash.display.BitmapData {}
 @:file("Assets/info/commands.txt") class __ASSET__a_info_commands_txt extends flash.utils.ByteArray {}
+@:file("Assets/info/default.css") class __ASSET__a_info_default_css extends flash.utils.ByteArray {}
 @:file("Assets/info/passages.json") class __ASSET__a_info_passages_json extends flash.utils.ByteArray {}
 @:sound("Assets/sound/test.mp3") class __ASSET__a_sound_test_mp3 extends flash.media.Sound {}
 @:font("Assets/font/main.ttf") class __ASSET__assets_font_main_ttf extends flash.text.Font {}

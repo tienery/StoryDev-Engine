@@ -1,5 +1,9 @@
 package game;
 
+import openfl.Assets;
+import openfl.errors.Error;
+import haxe.Json;
+
 /**
  * ...
  * @author Colour Multimedia Enterprises
@@ -14,6 +18,9 @@ class GameEvent
 	public var title:String;
 	public var triggerState:String;
 	
+	public function new() {
+		
+	}
 	
 	public static function initEvents() {
 		var eventsString:String = Assets.getText("a/info/events.json");
@@ -30,15 +37,13 @@ class GameEvent
 	}
 		
 	public static function startEvent(id:Int):Void {
-		for (i in 0...gameEvents.length) if (gameEvents[i].id == id) queuedEvents.push(gameEvents[i]);
-		
-		throw new Error("Game Event " + id + " does not exist");
+		for (i in gameEvents) if (i.id == id) queuedEvents.push(i);
+		else trace("Game Event " + id + " does not exist");
 	}
 	
 	public static function stopEvent(id:Int):Void {
-		for (i in 0...queuedEvents.length) if (queuedEvents[i].id == id) queuedEvents.slice(queuedEvents[i], 1);
-		
-		throw new Error("Game Event " + id + "has already been stopped.");
+		for (i in queuedEvents) if (i.id == id) queuedEvents.splice(queuedEvents.indexOf(i), 1);
+		else trace("Game Event " + id + "has already been stopped.");
 	}
 	
 	
