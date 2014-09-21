@@ -1,6 +1,7 @@
 package game;
 
-import flash.text.TextFormat;
+import haxe.Json;
+import openfl.text.TextFormat;
 import hscript.Expr.Error;
 import hscript.Interp;
 import hscript.Parser;
@@ -104,6 +105,8 @@ class GameState extends Sprite
 		_interp.variables.set("callEvent", callEvent);
 		_interp.variables.set("startEvent", GameEvent.startEvent);
 		_interp.variables.set("stopEvent", GameEvent.stopEvent);
+		_interp.variables.set("parseJson", Json.parse);
+		_interp.variables.set("stringifyJson", Json.stringify);
 
 		for (i in _interp.variables.keys())
 		{
@@ -138,15 +141,12 @@ class GameState extends Sprite
 	
 	private function callEvent(id:Int):Void 
 	{
-		for (i in 0...GameEvent.GameEvents.length)
-			if (GameEvent.GameEvents[i].id == id)
-				runCode(GameEvent.GameEvents[i].triggerState);
+		for (i in GameEvent.gameEvents) if (i.id == id) runCode(i.triggerState);
 	}
 	
-	private function callEvents():Void {
-		for (i in 0...GameEvent.QueuedEvents.length) {
-			runCode(GameEvent.QueuedEvents[i].triggerState);
-		}
+	private function callEvents():Void
+	{
+		for (i in GameEvent.queuedEvents) runCode(i.triggerState);
 	}
 
 	private function linkClicked(e:TextEvent):Void
@@ -254,6 +254,8 @@ class GameState extends Sprite
 
 	private function save():Void
 	{
+		_interp.variables.set("__lastPassage", _currentPassage);
+
 		var saveString:String = "";
 		for (i in _interp.variables.keys())
 		{
@@ -277,6 +279,12 @@ class GameState extends Sprite
 
 		var loadString:String = so.data.save;
 
+		if (loadString == null || loadString == "")
+		{
+			_interp.variables.set("__lastPassage", 0);
+			save();
+		}
+
 		var strings:Array<String> = loadString.split("|");
 
 		for (i in strings)
@@ -285,6 +293,6 @@ class GameState extends Sprite
 			if (Std.parseFloat(action[1]) != Math.NaN) _interp.variables.set(action[0], Std.parseFloat(action[1])) else _interp.variables.set(action[0], action[1]);
 		}
 
-		save();
+		gotoPassage(_interp.variables.get("__lastPassage"));
 	}
 }
