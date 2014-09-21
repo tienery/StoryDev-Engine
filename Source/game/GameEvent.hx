@@ -7,8 +7,8 @@ package game;
 class GameEvent
 {
 	
-	public static var GameEvents:Array<GameEvent> = [];
-	public static var QueuedEvents:Array<GameEvent> = [];
+	public static var gameEvents:Array<GameEvent> = [];
+	public static var queuedEvents:Array<GameEvent> = [];
 
 	public var id:Int;
 	public var title:String;
@@ -25,18 +25,18 @@ class GameEvent
 			e.title = eventsJSON.events[i].title;
 			e.triggerState = eventsJSON.events[i].triggerState;
 			
-			GameEvents.push(e);
+			gameEvents.push(e);
 		}
 	}
 		
 	public static function startEvent(id:Int):Void {
-		for (i in 0...GameEvents.length) if (GameEvents[i].id == id) QueuedEvents.push(GameEvents[i]);
+		for (i in 0...gameEvents.length) if (gameEvents[i].id == id) queuedEvents.push(gameEvents[i]);
 		
 		throw new Error("Game Event " + id + " does not exist");
 	}
 	
 	public static function stopEvent(id:Int):Void {
-		for (i in 0...QueuedEvents.length) if (QueuedEvents[i].id == id) QueuedEvents.slice(QueuedEvents[i], 1);
+		for (i in 0...queuedEvents.length) if (queuedEvents[i].id == id) queuedEvents.slice(queuedEvents[i], 1);
 		
 		throw new Error("Game Event " + id + "has already been stopped.");
 	}
