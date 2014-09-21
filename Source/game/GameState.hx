@@ -120,8 +120,9 @@ class GameState extends Sprite
 	{
 		if (_currentPassage != id) _lastPassage = _currentPassage; //Prevents refreshing wiping the _lastPassage
 		_currentPassage = id;
-
+		
 		var passage:Passage = Reg.getPassage(id);
+		callEvents();
 		runCode(passage.text);
 	}
 
@@ -137,14 +138,14 @@ class GameState extends Sprite
 	
 	private function callEvent(id:Int):Void 
 	{
-		for (i in 0...Reg._gameEvents.length)
-			if (Reg._gameEvents[i].id == id)
-				runCode(Reg._gameEvents[i].triggerState);
+		for (i in 0...GameEvent.GameEvents.length)
+			if (GameEvent.GameEvents[i].id == id)
+				runCode(GameEvent.GameEvents[i].triggerState);
 	}
 	
 	private function callEvents():Void {
-		for (i in 0...Reg._queuedEvents.length) {
-			runCode(Reg._queuedEvents[i].triggerState);
+		for (i in 0...GameEvent.QueuedEvents.length) {
+			runCode(GameEvent.QueuedEvents[i].triggerState);
 		}
 	}
 
@@ -160,9 +161,8 @@ class GameState extends Sprite
 	}
 
 	private function refreshPassage():Void {
-		
+		callEvents();
 		_storyText.htmlText = _storyString; 
-		
 	}
 
 	private function show(s:String):Void
