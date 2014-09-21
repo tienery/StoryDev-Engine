@@ -138,14 +138,14 @@ class GameState extends Sprite
 	
 	private function callEvent(id:Int):Void 
 	{
-		for (i in 0...GameEvent.GameEvents.length)
-			if (GameEvent.GameEvents[i].id == id)
-				runCode(GameEvent.GameEvents[i].triggerState);
+		for (i in 0...GameEvent.gameEvents.length)
+			if (GameEvent.gameEvents[i].id == id)
+				runCode(GameEvent.gameEvents[i].triggerState);
 	}
 	
 	private function callEvents():Void {
-		for (i in 0...GameEvent.QueuedEvents.length) {
-			runCode(GameEvent.QueuedEvents[i].triggerState);
+		for (i in 0...GameEvent.queuedEvents.length) {
+			runCode(GameEvent.queuedEvents[i].triggerState);
 		}
 	}
 
