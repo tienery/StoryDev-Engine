@@ -15,6 +15,7 @@ import openfl.geom.Point;
 import openfl.net.SharedObject;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import flash.text.StyleSheet;
 
 class GameState extends Sprite
 {
@@ -54,6 +55,7 @@ class GameState extends Sprite
 
 	private function setupMainText():Void
 	{
+		var styleSheet = new StyleSheet();
 		_storyText = new TextField();
 		_storyText.width = stage.stageWidth * .9;
 		_storyText.height = stage.stageHeight * .9;
@@ -64,7 +66,9 @@ class GameState extends Sprite
 		_storyText.defaultTextFormat = new TextFormat("main", 20);
 		_storyText.addEventListener(TextEvent.LINK, linkClicked);
 		_storyText.selectable = false;
-
+		styleSheet.parseCSS(Assets.getText("a/info/default.css"));
+		_storyText.styleSheet = styleSheet;
+		
 		_storyBG = new Sprite();
 		_storyBG.graphics.beginFill(0, .3);
 		_storyBG.graphics.drawRect(0, 0, 1, 1);
@@ -138,14 +142,14 @@ class GameState extends Sprite
 	
 	private function callEvent(id:Int):Void 
 	{
-		for (i in 0...GameEvent.GameEvents.length)
-			if (GameEvent.GameEvents[i].id == id)
-				runCode(GameEvent.GameEvents[i].triggerState);
+		for (i in 0...GameEvent.gameEvents.length)
+			if (GameEvent.gameEvents[i].id == id)
+				runCode(GameEvent.gameEvents[i].triggerState);
 	}
 	
 	private function callEvents():Void {
-		for (i in 0...GameEvent.QueuedEvents.length) {
-			runCode(GameEvent.QueuedEvents[i].triggerState);
+		for (i in 0...GameEvent.queuedEvents.length) {
+			runCode(GameEvent.queuedEvents[i].triggerState);
 		}
 	}
 
@@ -181,7 +185,7 @@ class GameState extends Sprite
 
 	private function appendLink(s:String, l:String):Void
 	{
-		_storyString += "<a href=\'event:" + l + "\'>" + s + "";
+		_storyString += "<a href=\'event:" + l + "\'>" + s + "</a>";
 		refreshPassage();
 	}
 	
