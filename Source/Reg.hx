@@ -4,7 +4,6 @@ import game.Passage;
 import haxe.Json;
 import openfl.Assets;
 import openfl.errors.Error;
-import game.GameEvent;
 
 class Reg
 {
@@ -26,6 +25,7 @@ class Reg
 			p.id = passageJSON.passages[i].id;
 			p.title = passageJSON.passages[i].title;
 			p.text = passageJSON.passages[i].text;
+			p.htmlText = passageJSON.passages[i].htmlText;
 
 			_passages.push(p);
 		}

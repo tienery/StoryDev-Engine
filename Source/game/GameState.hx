@@ -102,9 +102,6 @@ class GameState extends Sprite
 		_interp.variables.set("goBack", goBack);
 		_interp.variables.set("save", save);
 		_interp.variables.set("load", load);
-		_interp.variables.set("callEvent", callEvent);
-		_interp.variables.set("startEvent", GameEvent.startEvent);
-		_interp.variables.set("stopEvent", GameEvent.stopEvent);
 		_interp.variables.set("parseJson", Json.parse);
 		_interp.variables.set("stringifyJson", Json.stringify);
 
@@ -125,7 +122,8 @@ class GameState extends Sprite
 		_currentPassage = id;
 		
 		var passage:Passage = Reg.getPassage(id);
-		callEvents();
+
+		if (passage.htmlText != null) show(passage.htmlText);
 		runCode(passage.text);
 	}
 
@@ -137,16 +135,6 @@ class GameState extends Sprite
 		} catch (e:Error) {
 			trace("ERROR: " + e.getName());
 		}
-	}
-	
-	private function callEvent(id:Int):Void 
-	{
-		for (i in GameEvent.gameEvents) if (i.id == id) runCode(i.triggerState);
-	}
-	
-	private function callEvents():Void
-	{
-		for (i in GameEvent.queuedEvents) runCode(i.triggerState);
 	}
 
 	private function linkClicked(e:TextEvent):Void
@@ -160,10 +148,7 @@ class GameState extends Sprite
      	else if (e.delta > 0) _storyText.scrollV--;
 	}
 
-	private function refreshPassage():Void {
-		callEvents();
-		_storyText.htmlText = _storyString; 
-	}
+	private function refreshPassage():Void { _storyText.htmlText = _storyString; }
 
 	private function show(s:String):Void
 	{
@@ -254,7 +239,8 @@ class GameState extends Sprite
 
 	private function save():Void
 	{
-		_interp.variables.set("__lastPassage", _currentPassage);
+		_interp.variables.set("__currentPassage", _currentPassage);
+		_interp.variables.set("__lastPassage", _lastPassage);
 
 		var saveString:String = "";
 		for (i in _interp.variables.keys())
@@ -281,7 +267,8 @@ class GameState extends Sprite
 
 		if (loadString == null || loadString == "")
 		{
-			_interp.variables.set("__lastPassage", 0);
+			_interp.variables.set("__currentPassage", 0);
+			_interp.variables.set("__lastPassage", -1);
 			save();
 		}
 
@@ -293,6 +280,6 @@ class GameState extends Sprite
 			if (Std.parseFloat(action[1]) != Math.NaN) _interp.variables.set(action[0], Std.parseFloat(action[1])) else _interp.variables.set(action[0], action[1]);
 		}
 
-		gotoPassage(_interp.variables.get("__lastPassage"));
+		gotoPassage(_interp.variables.get("__currentPassage"));
 	}
 }

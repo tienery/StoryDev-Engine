@@ -10,7 +10,8 @@
         {
             "id": 1,
             "title": "Start",
-            "text": "show('Test home page:\n\n'); appendLink('Passage test', 'gotoPassage(2)'); appendShow('\n\n'); appendLink('Math', 'gotoPassage(3)'); appendShow('\n\n'); appendLink('Variables', 'gotoPassage(4)'); appendShow('\n\n'); appendLink('HTML', 'gotoPassage(5)'); appendShow('\n\n');  appendLink('Logic', 'gotoPassage(6)'); appendShow('\n\n');  appendLink('Images and sound', 'gotoPassage(7)'); appendShow('\n\n'); appendLink('Save', 'gotoPassage(8)'); appendShow('\n\n'); appendLink('Load', 'gotoPassage(9)');"
+            "text": "appendShow('Test home page:\n\n'); appendLink('Passage test', 'gotoPassage(2)'); appendShow('\n\n'); appendLink('Math', 'gotoPassage(3)'); appendShow('\n\n'); appendLink('Variables', 'gotoPassage(4)'); appendShow('\n\n'); appendLink('HTML', 'gotoPassage(5)'); appendShow('\n\n');  appendLink('Logic', 'gotoPassage(6)'); appendShow('\n\n');  appendLink('Images and sound', 'gotoPassage(7)'); appendShow('\n\n'); appendLink('Save', 'gotoPassage(8)'); appendShow('\n\n'); appendLink('Load', 'gotoPassage(9)');",
+            "htmlText": "This is an extra bit of text that will get show()-ed before everything else, make sure not to use show() in the 'text' property or this will be wipped.\n\n"
         },
         {
             "id": 2,
@@ -50,7 +51,7 @@
         {
             "id": 9,
             "title": "Load",
-            "text": "load(); show('Game loaded\n\n'); appendLink('Go Back', 'goBack()');"
+            "text": "load();"
         }
     ]
 }
