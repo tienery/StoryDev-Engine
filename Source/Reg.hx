@@ -26,6 +26,7 @@ class Reg
 			p.id = passageJSON.passages[i].id;
 			p.title = passageJSON.passages[i].title;
 			p.text = passageJSON.passages[i].text;
+			p.html = passageJSON.passages[i].html;
 
 			_passages.push(p);
 		}

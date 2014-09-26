@@ -15,7 +15,6 @@ import openfl.geom.Point;
 import openfl.net.SharedObject;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import flash.text.StyleSheet;
 
 class GameState extends Sprite
 {
@@ -55,7 +54,6 @@ class GameState extends Sprite
 
 	private function setupMainText():Void
 	{
-		var styleSheet = new StyleSheet();
 		_storyText = new TextField();
 		_storyText.width = stage.stageWidth * .9;
 		_storyText.height = stage.stageHeight * .9;
@@ -66,8 +64,6 @@ class GameState extends Sprite
 		_storyText.defaultTextFormat = new TextFormat("main", 20);
 		_storyText.addEventListener(TextEvent.LINK, linkClicked);
 		_storyText.selectable = false;
-		styleSheet.parseCSS(Assets.getText("a/info/default.css"));
-		_storyText.styleSheet = styleSheet;
 		
 		_storyBG = new Sprite();
 		_storyBG.graphics.beginFill(0, .3);
@@ -126,6 +122,7 @@ class GameState extends Sprite
 		_currentPassage = id;
 		
 		var passage:Passage = Reg.getPassage(id);
+		passage.text += "show('" + passage.html + "');\n";
 		callEvents();
 		runCode(passage.text);
 	}
@@ -147,10 +144,10 @@ class GameState extends Sprite
 				runCode(GameEvent.gameEvents[i].triggerState);
 	}
 	
-	private function callEvents():Void {
-		for (i in 0...GameEvent.queuedEvents.length) {
+	private function callEvents():Void 
+	{
+		for (i in 0...GameEvent.queuedEvents.length)
 			runCode(GameEvent.queuedEvents[i].triggerState);
-		}
 	}
 
 	private function linkClicked(e:TextEvent):Void
