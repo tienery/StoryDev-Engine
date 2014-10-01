@@ -10,7 +10,7 @@
         {
             "id": 1,
             "title": "Start",
-            "text": "appendShow('Test home page:\n\n'); appendLink('Passage test', 'gotoPassage(2)'); appendShow('\n\n'); appendLink('Math', 'gotoPassage(3)'); appendShow('\n\n'); appendLink('Variables', 'gotoPassage(4)'); appendShow('\n\n'); appendLink('HTML', 'gotoPassage(5)'); appendShow('\n\n');  appendLink('Logic', 'gotoPassage(6)'); appendShow('\n\n');  appendLink('Images and sound', 'gotoPassage(7)'); appendShow('\n\n'); appendLink('Save', 'gotoPassage(8)'); appendShow('\n\n'); appendLink('Load', 'gotoPassage(9)'); appendShow('\n\n'); appendLink('Game Events', 'gotoPassage(10)');",
+            "text": "appendShow('Test home page:\n\n'); appendLink('Passage test', 'gotoPassage(2)'); appendShow('\n\n'); appendLink('Math', 'gotoPassage(3)'); appendShow('\n\n'); appendLink('Variables', 'gotoPassage(4)'); appendShow('\n\n'); appendLink('HTML', 'gotoPassage(5)'); appendShow('\n\n');  appendLink('Logic', 'gotoPassage(6)'); appendShow('\n\n');  appendLink('Images and sound', 'gotoPassage(7)'); appendShow('\n\n'); appendLink('Game Events', 'gotoPassage(10)');",
             "htmlText": "This is an extra bit of text that will get show()-ed before everything else, make sure not to use show() in the 'text' property or this will be wipped.\n\n"
         },
         {
@@ -41,17 +41,7 @@
         {
             "id": 7,
             "title": "Images and sound",
-            "text": "transPassage(10, 30, 600, __stageHeight * .9, 1); show('');appendLink('Show character image - Includes custom transition', 'showCharImage(\"char0\", true); transCharImage(__stageWidth - 80, 30, 70, 350, 1);');appendShow('\n\n');appendLink('Remove character image', 'removeCharImage(true)');appendShow('\n\n');appendLink('Show bg image', 'showBGImage(\"bg0\")');appendShow('\n\n');appendLink('Remove bg image', 'removeBGImage()');appendShow('\n\n');appendLink('Play sound', 'playSound(\"test.mp3\", 0, 0)');appendShow('\n\n');appendLink('Go Back', 'goBack()');appendShow('\n\n');appendLink('Default Passage size', 'removeCharImage()');"
-        },
-        {
-            "id": 8,
-            "title": "Save",
-            "text": "save(); show('Game saved\n\n'); appendLink('Go Back', 'goBack()');"
-        },
-        {
-            "id": 9,
-            "title": "Load",
-            "text": "load();"
+            "text": "show('');appendLink('Show character image - Includes custom transition', 'transPassage(30, 30, __stageWidth * .5, __stageHeight * .9, 1); showCharImage(\"char0\", true); transCharImage(__stageWidth - 80, 30, 70, 350, 1);');appendShow('\n\n');appendLink('Remove character image', 'removeCharImage(true)');appendShow('\n\n');appendLink('Show bg image', 'showBGImage(\"bg0\")');appendShow('\n\n');appendLink('Remove bg image', 'removeBGImage()');appendShow('\n\n');appendLink('Play sound', 'playSound(\"test.mp3\", 0, 0)');appendShow('\n\n');appendLink('Go Back', 'goBack()');appendShow('\n\n');appendLink('Default Passage size', 'removeCharImage()');"
         },
 		{
 			"id":10,

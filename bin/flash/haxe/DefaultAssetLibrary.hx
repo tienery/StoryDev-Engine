@@ -48,10 +48,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
-		className.set ("a/img/bg0.png", __ASSET__a_img_bg0_png);
-		type.set ("a/img/bg0.png", AssetType.IMAGE);
-		className.set ("a/img/char0.png", __ASSET__a_img_char0_png);
-		type.set ("a/img/char0.png", AssetType.IMAGE);
+		className.set ("a/img/MessageBox.png", __ASSET__a_img_messagebox_png);
+		type.set ("a/img/MessageBox.png", AssetType.IMAGE);
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
 		className.set ("a/info/events.json", __ASSET__a_info_events_json);
@@ -70,10 +68,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "a/font/main.ttf";
 		className.set (id, __ASSET__a_font_main_ttf);
 		type.set (id, AssetType.FONT);
-		id = "a/img/bg0.png";
-		path.set (id, id);
-		type.set (id, AssetType.IMAGE);
-		id = "a/img/char0.png";
+		id = "a/img/MessageBox.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "a/info/commands.txt";
@@ -102,11 +97,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
 		
-		className.set ("a/img/bg0.png", __ASSET__a_img_bg0_png);
-		type.set ("a/img/bg0.png", AssetType.IMAGE);
-		
-		className.set ("a/img/char0.png", __ASSET__a_img_char0_png);
-		type.set ("a/img/char0.png", AssetType.IMAGE);
+		className.set ("a/img/MessageBox.png", __ASSET__a_img_messagebox_png);
+		type.set ("a/img/MessageBox.png", AssetType.IMAGE);
 		
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
@@ -740,8 +732,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 #elseif flash
 
 @:keep class __ASSET__a_font_main_ttf extends openfl.text.Font { }
-@:keep class __ASSET__a_img_bg0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep class __ASSET__a_img_char0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__a_img_messagebox_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_info_commands_txt extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_events_json extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_passages_json extends openfl.utils.ByteArray { }
@@ -760,13 +751,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
-
 #elseif (windows || mac || linux)
 
 
 @:font("assets/font/main.ttf") class __ASSET__a_font_main_ttf extends flash.text.Font {}
-@:bitmap("assets/img/bg0.png") class __ASSET__a_img_bg0_png extends flash.display.BitmapData {}
-@:bitmap("assets/img/char0.png") class __ASSET__a_img_char0_png extends flash.display.BitmapData {}
+@:bitmap("assets/img/MessageBox.png") class __ASSET__a_img_messagebox_png extends flash.display.BitmapData {}
 @:file("assets/info/commands.txt") class __ASSET__a_info_commands_txt extends flash.utils.ByteArray {}
 @:file("assets/info/events.json") class __ASSET__a_info_events_json extends flash.utils.ByteArray {}
 @:file("assets/info/passages.json") class __ASSET__a_info_passages_json extends flash.utils.ByteArray {}

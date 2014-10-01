@@ -16,12 +16,37 @@ import openfl.geom.Point;
 import openfl.net.SharedObject;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.display.StageScaleMode;
+import openfl.display.StageQuality;
+import openfl.display.StageAlign;
+import webm.WebmIo;
 
 class GameState extends Sprite
 {
 	private var _storyText:TextField;
 	private var _storyBG:Sprite;
 	private var _storyString:String;
+	private var _menuText:TextField;
+	private var _menuBG:Sprite;
+	private var _textureQualityText:TextField;
+	private var _musicVolumeText:TextField;
+	private var _sfxVolumeText:TextField;
+	private var _vocalVolumeText:TextField;
+	private var _saveText:TextField;
+	private var _loadText:TextField;
+	private var _returnHomeText:TextField;
+	private var _helpOptionsText:TextField;
+	private var _fullscreenText:TextField;
+	private var _no:TextField;
+	private var _yes:TextField;
+	private var _confirm:TextField;
+	
+	private var _textureQuality:Int;
+	private var _musicVolume:Int;
+	private var _sfxVolume:Int;
+	private var _vocalVolume:Int;
+	private var _videoVolume:Int;
+	private var _fullscreen:Bool;
 
 	private var _charImage:Bitmap;
 	private var _bgImage:Bitmap;
@@ -48,13 +73,331 @@ class GameState extends Sprite
 	public function init(e:Event):Void
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, init);
+		stage.addEventListener(Event.RESIZE, onStageResize);
 
+		_textureQuality = 2;
+		_musicVolume = 50;
+		_sfxVolume = 50;
+		_vocalVolume = 50;
+		_videoVolume = 50;
+		
+		stage.quality = StageQuality.HIGH;
+		
 		setupMainText();
 		setupEvents();
 		setupHScript();
 		GameEvent.initEvents();
+		setupPauseMenu();
 
 		gotoPassage();
+	}
+	
+	private function onStageResize(e:Event):Void
+	{
+		stage.scaleMode = StageScaleMode.EXACT_FIT;
+	}
+	
+	private function setupPauseMenu():Void
+	{
+		_menuText = new TextField();
+		_menuText.width = 55;
+		_menuText.height = 20;
+		_menuText.x = 0;
+		_menuText.y = 0;
+		_menuText.selectable = false;
+		_menuText.defaultTextFormat = new TextFormat("main", 16);
+		_menuText.text = "MENU";
+		_menuText.addEventListener(MouseEvent.CLICK, showPauseMenu);
+		
+		_menuBG = new Sprite();
+		_menuBG.graphics.beginFill(0, .6);
+		_menuBG.graphics.drawRect(0, 0, 1, 1);
+		_menuBG.x = 0;
+		_menuBG.y = 0;
+		_menuBG.width = stage.stageWidth;
+		_menuBG.height = stage.stageHeight;
+		
+		_helpOptionsText = new TextField();
+		_helpOptionsText.width = 500;
+		_helpOptionsText.height = 25;
+		_helpOptionsText.x = stage.stageWidth / 2 - _helpOptionsText.width / 2;
+		_helpOptionsText.y = 25;
+		_helpOptionsText.textColor = 0xFFFFFF;
+		_helpOptionsText.defaultTextFormat = new TextFormat("main", 14);
+		_helpOptionsText.text = "Hover over an item to display help options.";
+		_helpOptionsText.selectable = false;
+		
+		_textureQualityText = new TextField();
+		_textureQualityText.height = 30;
+		_textureQualityText.width = 300;
+		_textureQualityText.x = stage.stageWidth / 2 - _textureQualityText.width / 2;
+		_textureQualityText.y = 50;
+		_textureQualityText.textColor = 0xFFFFFF;
+		_textureQualityText.defaultTextFormat = new TextFormat("main", 20);
+		_textureQualityText.text = "Display Quality: " + getQualityInfo();
+		_textureQualityText.selectable = false;
+		_textureQualityText.addEventListener(MouseEvent.MOUSE_WHEEL, setQuality);
+		_textureQualityText.addEventListener(MouseEvent.MOUSE_OVER, onTextureHover);
+		
+		_musicVolumeText = new TextField();
+		_musicVolumeText.height = 30;
+		_musicVolumeText.width = 300;
+		_musicVolumeText.x = stage.stageWidth / 2 - _musicVolumeText.width / 2;
+		_musicVolumeText.y = 85;
+		_musicVolumeText.textColor = 0xFFFFFF;
+		_musicVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_musicVolumeText.selectable = false;
+		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
+		_musicVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setMusicVolume);
+		_musicVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
+		
+		_sfxVolumeText = new TextField();
+		_sfxVolumeText.height = 30;
+		_sfxVolumeText.width = 300;
+		_sfxVolumeText.x = stage.stageWidth / 2 - _sfxVolumeText.width / 2;
+		_sfxVolumeText.y = 120;
+		_sfxVolumeText.textColor = 0xFFFFFF;
+		_sfxVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_sfxVolumeText.selectable = false;
+		_sfxVolumeText.text = "SFX Volume: " + _sfxVolume + "%";
+		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setSFXVolume);
+		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
+		
+		_vocalVolumeText = new TextField();
+		_vocalVolumeText.height = 30;
+		_vocalVolumeText.width = 300;
+		_vocalVolumeText.x = stage.stageWidth / 2 - _vocalVolumeText.width / 2;
+		_vocalVolumeText.y = 155;
+		_vocalVolumeText.textColor = 0xFFFFFF;
+		_vocalVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_vocalVolumeText.selectable = false;
+		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
+		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setVocalVolume);
+		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
+		
+		_saveText = new TextField();
+		_saveText.height = 30;
+		_saveText.width = 300;
+		_saveText.x = stage.stageWidth / 2 - _saveText.width / 2;
+		_saveText.y = 190;
+		_saveText.textColor = 0xFFFFFF;
+		_saveText.defaultTextFormat = new TextFormat("main", 20);
+		_saveText.selectable = false;
+		_saveText.text = "Save Game";
+		_saveText.addEventListener(MouseEvent.CLICK, saveGame); 
+		_saveText.addEventListener(MouseEvent.MOUSE_OVER, onSaveHover);
+		
+		_loadText = new TextField();
+		_loadText.height = 30;
+		_loadText.width = 300;
+		_loadText.x = stage.stageWidth / 2 - _loadText.width / 2;
+		_loadText.y = 225;
+		_loadText.textColor = 0xFFFFFF;
+		_loadText.defaultTextFormat = new TextFormat("main", 20);
+		_loadText.selectable = false;
+		_loadText.text = "Load Game";
+		_loadText.addEventListener(MouseEvent.CLICK, loadGame);
+		_loadText.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent) { _helpOptionsText.text = "Load a previously saved game."; } );
+		
+		_returnHomeText = new TextField();
+		_returnHomeText.height = 30;
+		_returnHomeText.width = 300;
+		_returnHomeText.x = stage.stageWidth / 2 - _returnHomeText.width / 2;
+		_returnHomeText.y = 260;
+		_returnHomeText.textColor = 0xFFFFFF;
+		_returnHomeText.defaultTextFormat = new TextFormat("main", 20);
+		_returnHomeText.selectable = false;
+		_returnHomeText.text = "Return to Home";
+		_returnHomeText.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) { gotoPassage(1); } );
+		_returnHomeText.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent) { _helpOptionsText.text = "Return to the Home passage. Does not reset data."; } );
+		
+		addChild(_menuText);
+	}
+	
+	private function loadGame(e:MouseEvent):Void
+	{
+		load();
+	}
+	
+	private function saveGame(e:MouseEvent):Void 
+	{
+		removeMenu();
+		_confirm = new TextField();
+		_confirm.width = 355;
+		_confirm.height = 25;
+		_confirm.x = stage.stageWidth / 2 - _confirm.width / 2;
+		_confirm.y = stage.stageHeight / 2 - _confirm.height / 2;
+		_confirm.textColor = 0xFFFFFF;
+		_confirm.defaultTextFormat = new TextFormat("main", 15);
+		_confirm.selectable = false;
+		_confirm.text = "Are you sure you wish to overwrite existing data and save?";
+		
+		_yes = new TextField();
+		_yes.width = 45;
+		_yes.height = 30;
+		_yes.y = _confirm.y + 35;
+		_yes.x = (stage.stageWidth / 2 - _yes.width / 2) - 50;
+		_yes.selectable = false;
+		_yes.textColor = 0xFFFFFF;
+		_yes.defaultTextFormat = new TextFormat("main", 15);
+		_yes.text = "Yes";
+		_yes.addEventListener(MouseEvent.CLICK, onYesClicked);
+		
+		_no = new TextField();
+		_no.width = 45;
+		_no.height = 30;
+		_no.y = _confirm.y + 35;
+		_no.x = (stage.stageWidth / 2 - _no.width / 2) + 50;
+		_no.selectable = false;
+		_no.textColor = 0xFFFFFF;
+		_no.defaultTextFormat = new TextFormat("main", 15);
+		_no.text = "No";
+		_no.addEventListener(MouseEvent.CLICK, onNoClicked);
+		
+		addChild(_confirm);
+		addChild(_yes);
+		addChild(_no);
+	}
+	
+	private function onNoClicked(e:MouseEvent):Void
+	{
+		removeChild(_confirm);
+		removeChild(_yes);
+		removeChild(_no);
+		openMenu();
+	}
+	
+	private function onYesClicked(e:MouseEvent):Void
+	{
+		save();
+		removeChild(_confirm);
+		removeChild(_yes);
+		removeChild(_no);
+		openMenu();
+	}
+	
+	private function getQualityInfo():String
+	{
+		if (_textureQuality == 3) return "Highest";
+		else if (_textureQuality == 2) return "High";
+		else if (_textureQuality == 1) return "Moderate";
+		else if (_textureQuality == 0) return "Low";
+		else return "";
+	}
+	
+	private function onTextureHover(e:MouseEvent):Void
+	{
+		_helpOptionsText.text = "Adjusts the texture quality and anti-aliasing of sprites. Scroll to change.";
+	}
+	
+	private function onVolumeHover(e:MouseEvent):Void
+	{
+		_helpOptionsText.text = "Changes the volume of the given channel. Scroll to change.";
+	}
+	
+	private function onSaveHover(e:MouseEvent):Void
+	{
+		_helpOptionsText.text = "Save the game. This will overwrite any existing data. Click to save.";
+	}
+	
+	private function setVocalVolume(e:MouseEvent):Void
+	{
+		if (e.delta > 0) _vocalVolume += 5;
+		else _vocalVolume -= 5;
+		
+		if (_vocalVolume > 100) _vocalVolume = 100;
+		if (_vocalVolume < 0) _vocalVolume = 0;
+		
+		Sm.modifyChannel(Sm.VOCAL_CHANNEL, _vocalVolume, 50);
+		
+		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
+	}
+	
+	private function setSFXVolume(e:MouseEvent):Void
+	{
+		if (e.delta > 0) _sfxVolume += 5;
+		else _sfxVolume -= 5;
+		
+		if (_sfxVolume > 100) _sfxVolume = 100;
+		if (_sfxVolume < 0) _sfxVolume = 0;
+		
+		Sm.modifyChannel(Sm.SFX_CHANNEL, _sfxVolume, 50);
+		
+		_sfxVolumeText.text = "SFX Volume: " + _sfxVolume + "%";
+	}
+	
+	private function setMusicVolume(e:MouseEvent):Void
+	{
+		if (e.delta > 0) _musicVolume += 5;
+		else _musicVolume -= 5;
+		
+		if (_musicVolume > 100) _musicVolume = 100;
+		if (_musicVolume < 0) _musicVolume = 0;
+		
+		Sm.modifyChannel(Sm.MUSIC_CHANNEL, _musicVolume, 50);
+		
+		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
+	}
+	
+	private function setQuality(e:MouseEvent):Void
+	{
+		if (e.delta > 0) _textureQuality++;
+		else _textureQuality--;
+		
+		if (_textureQuality > 3) _textureQuality = 3;
+		if (_textureQuality < 0) _textureQuality = 0;
+		
+		switch(_textureQuality) 
+		{
+			case 0:
+				stage.quality = StageQuality.LOW;
+			case 1:
+				stage.quality = StageQuality.MEDIUM;
+			case 2:
+				stage.quality = StageQuality.HIGH;
+			case 3:
+				stage.quality = StageQuality.BEST;
+		}
+		
+		_textureQualityText.text = "Display Quality: " + getQualityInfo();
+	}
+	
+	private function showPauseMenu(e:MouseEvent):Void 
+	{
+		if (_menuText.text == "MENU") {
+			addChildAt(_menuBG, getChildIndex(_menuText) - 1);
+			openMenu();
+			_menuText.text = "CLOSE";
+		}
+		else {
+			removeChild(_menuBG);
+			removeMenu();
+			_menuText.text = "MENU";
+		}
+	}
+	
+	private function removeMenu():Void
+	{
+		removeChild(_helpOptionsText);
+		removeChild(_textureQualityText);
+		removeChild(_musicVolumeText);
+		removeChild(_sfxVolumeText);
+		removeChild(_vocalVolumeText);
+		removeChild(_saveText);
+		removeChild(_loadText);
+		removeChild(_returnHomeText);
+	}
+	
+	private function openMenu():Void
+	{
+		addChildAt(_helpOptionsText, getChildIndex(_menuText));
+		addChildAt(_textureQualityText, getChildIndex(_menuText));
+		addChildAt(_musicVolumeText, getChildIndex(_menuText));
+		addChildAt(_sfxVolumeText, getChildIndex(_menuText));
+		addChildAt(_vocalVolumeText, getChildIndex(_menuText));
+		addChildAt(_saveText, getChildIndex(_menuText));
+		addChildAt(_loadText, getChildIndex(_menuText));
+		addChildAt(_returnHomeText, getChildIndex(_menuText));
 	}
 
 	private function setupMainText():Void
@@ -66,7 +409,7 @@ class GameState extends Sprite
 		_storyText.wordWrap = true;
 		_storyText.x = stage.stageWidth / 2 - _storyText.width / 2;
 		_storyText.y = stage.stageHeight / 2 - _storyText.height / 2;
-		_storyText.defaultTextFormat = new TextFormat("main", 20);
+		_storyText.defaultTextFormat = new TextFormat("main", 14);
 		_storyText.addEventListener(TextEvent.LINK, linkClicked);
 		_storyText.selectable = false;
 
@@ -104,8 +447,6 @@ class GameState extends Sprite
 		_interp.variables.set("showBGImage", showBGImage);
 		_interp.variables.set("removeBGImage", removeBGImage);
 		_interp.variables.set("goBack", goBack);
-		_interp.variables.set("save", save);
-		_interp.variables.set("load", load);
 		_interp.variables.set("parseJson", Json.parse);
 		_interp.variables.set("stringifyJson", Json.stringify);
 		_interp.variables.set("startEvent", GameEvent.startEvent);
@@ -335,8 +676,4 @@ class GameState extends Sprite
 		Actuate.tween(_storyBG, time, { x:x, y:y, width:width, height:height } );
 	}
 	
-	private function shakeScreen():Void 
-	{
-		
-	}
 }
