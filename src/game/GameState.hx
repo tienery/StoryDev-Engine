@@ -19,7 +19,14 @@ import openfl.text.TextFormat;
 import openfl.display.StageScaleMode;
 import openfl.display.StageQuality;
 import openfl.display.StageAlign;
-import webm.WebmIo;
+import openfl.text.Font;
+
+#if js
+@:font("a/font/main.ttf") class DefaultFont extends Font { }
+@:font("a/font/main-bold.ttf") class BoldFont extends Font { }
+@:font("a/font/main-bolditalic.ttf") class BoldItalicFont extends Font { }
+@:font("a/font/main-italic.ttf") class ItalicFont extends Font { }
+#end
 
 class GameState extends Sprite
 {
@@ -40,6 +47,14 @@ class GameState extends Sprite
 	private var _no:TextField;
 	private var _yes:TextField;
 	private var _confirm:TextField;
+	private var _defaultFont:Font = Assets.getFont("a/font/main.ttf");
+	private var _boldFont:Font = Assets.getFont("a/font/main-bold.ttf");
+	private var _boldItalicFont:Font = Assets.getFont("a/font/main-bolditalic.ttf");
+	private var _italicFont:Font = Assets.getFont("a/font/main-italic.ttf");
+	private var _defaultFormat:TextFormat;
+	private var _boldFormat:TextFormat;
+	private var _boldItalicFormat:TextFormat;
+	private var _italicFormat:TextFormat;
 	
 	private var _textureQuality:Int;
 	private var _musicVolume:Int;
@@ -81,7 +96,25 @@ class GameState extends Sprite
 		_vocalVolume = 50;
 		_videoVolume = 50;
 		
+		#if js
+		_defaultFormat = new TextFormat("main");
+		_boldFormat = new TextFormat("main-bold");
+		_boldItalicFormat = new TextFormat("main-bolditalic");
+		_italicFormat = new TextFormat("main-italic");
+		#else
+		_defaultFormat = new TextFormat(_defaultFont.fontName);
+		_boldFormat = new TextFormat(_boldFont.fontName);
+		_boldItalicFormat = new TextFormat(_boldItalicFont.fontName);
+		_italicFormat = new TextFormat(_italicFont.fontName);
+		#end
+		
 		stage.quality = StageQuality.HIGH;
+		#if js
+		Font.registerFont(DefaultFont);
+		Font.registerFont(BoldFont);
+		Font.registerFont(BoldItalicFont);
+		Font.registerFont(ItalicFont);
+		#end
 		
 		setupMainText();
 		setupEvents();
@@ -99,14 +132,17 @@ class GameState extends Sprite
 	
 	private function setupPauseMenu():Void
 	{
+		
 		_menuText = new TextField();
 		_menuText.width = 55;
 		_menuText.height = 20;
 		_menuText.x = 0;
 		_menuText.y = 0;
 		_menuText.selectable = false;
-		_menuText.defaultTextFormat = new TextFormat("main", 16);
+		_menuText.defaultTextFormat = _defaultFormat;
+		_menuText.defaultTextFormat.size = 16;
 		_menuText.text = "MENU";
+		_menuText.embedFonts = true;
 		_menuText.addEventListener(MouseEvent.CLICK, showPauseMenu);
 		
 		_menuBG = new Sprite();
@@ -123,7 +159,9 @@ class GameState extends Sprite
 		_helpOptionsText.x = stage.stageWidth / 2 - _helpOptionsText.width / 2;
 		_helpOptionsText.y = 25;
 		_helpOptionsText.textColor = 0xFFFFFF;
-		_helpOptionsText.defaultTextFormat = new TextFormat("main", 14);
+		_helpOptionsText.embedFonts = true;
+		_helpOptionsText.defaultTextFormat = _defaultFormat;
+		_helpOptionsText.defaultTextFormat.size = 14;
 		_helpOptionsText.text = "Hover over an item to display help options.";
 		_helpOptionsText.selectable = false;
 		
@@ -133,8 +171,10 @@ class GameState extends Sprite
 		_textureQualityText.x = stage.stageWidth / 2 - _textureQualityText.width / 2;
 		_textureQualityText.y = 50;
 		_textureQualityText.textColor = 0xFFFFFF;
-		_textureQualityText.defaultTextFormat = new TextFormat("main", 20);
+		_textureQualityText.defaultTextFormat = _defaultFormat;
+		_textureQualityText.defaultTextFormat.size = 20;
 		_textureQualityText.text = "Display Quality: " + getQualityInfo();
+		_textureQualityText.embedFonts = true;
 		_textureQualityText.selectable = false;
 		_textureQualityText.addEventListener(MouseEvent.MOUSE_WHEEL, setQuality);
 		_textureQualityText.addEventListener(MouseEvent.MOUSE_OVER, onTextureHover);
@@ -145,8 +185,10 @@ class GameState extends Sprite
 		_musicVolumeText.x = stage.stageWidth / 2 - _musicVolumeText.width / 2;
 		_musicVolumeText.y = 85;
 		_musicVolumeText.textColor = 0xFFFFFF;
-		_musicVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_musicVolumeText.defaultTextFormat = _defaultFormat;
+		_musicVolumeText.defaultTextFormat.size = 20;
 		_musicVolumeText.selectable = false;
+		_musicVolumeText.embedFonts = true;
 		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
 		_musicVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setMusicVolume);
 		_musicVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
@@ -157,8 +199,10 @@ class GameState extends Sprite
 		_sfxVolumeText.x = stage.stageWidth / 2 - _sfxVolumeText.width / 2;
 		_sfxVolumeText.y = 120;
 		_sfxVolumeText.textColor = 0xFFFFFF;
-		_sfxVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_sfxVolumeText.defaultTextFormat = _defaultFormat;
+		_sfxVolumeText.defaultTextFormat.size = 20;
 		_sfxVolumeText.selectable = false;
+		_sfxVolumeText.embedFonts = true;
 		_sfxVolumeText.text = "SFX Volume: " + _sfxVolume + "%";
 		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setSFXVolume);
 		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
@@ -169,8 +213,10 @@ class GameState extends Sprite
 		_vocalVolumeText.x = stage.stageWidth / 2 - _vocalVolumeText.width / 2;
 		_vocalVolumeText.y = 155;
 		_vocalVolumeText.textColor = 0xFFFFFF;
-		_vocalVolumeText.defaultTextFormat = new TextFormat("main", 20);
+		_vocalVolumeText.defaultTextFormat = _defaultFormat;
+		_vocalVolumeText.defaultTextFormat.size = 20;
 		_vocalVolumeText.selectable = false;
+		_vocalVolumeText.embedFonts = true;
 		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
 		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setVocalVolume);
 		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
@@ -181,8 +227,10 @@ class GameState extends Sprite
 		_saveText.x = stage.stageWidth / 2 - _saveText.width / 2;
 		_saveText.y = 190;
 		_saveText.textColor = 0xFFFFFF;
-		_saveText.defaultTextFormat = new TextFormat("main", 20);
+		_saveText.defaultTextFormat = _defaultFormat;
+		_saveText.defaultTextFormat.size = 20;
 		_saveText.selectable = false;
+		_saveText.embedFonts = true;
 		_saveText.text = "Save Game";
 		_saveText.addEventListener(MouseEvent.CLICK, saveGame); 
 		_saveText.addEventListener(MouseEvent.MOUSE_OVER, onSaveHover);
@@ -193,8 +241,10 @@ class GameState extends Sprite
 		_loadText.x = stage.stageWidth / 2 - _loadText.width / 2;
 		_loadText.y = 225;
 		_loadText.textColor = 0xFFFFFF;
-		_loadText.defaultTextFormat = new TextFormat("main", 20);
+		_loadText.defaultTextFormat = _defaultFormat;
+		_loadText.defaultTextFormat.size = 20;
 		_loadText.selectable = false;
+		_loadText.embedFonts = true;
 		_loadText.text = "Load Game";
 		_loadText.addEventListener(MouseEvent.CLICK, loadGame);
 		_loadText.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent) { _helpOptionsText.text = "Load a previously saved game."; } );
@@ -205,7 +255,9 @@ class GameState extends Sprite
 		_returnHomeText.x = stage.stageWidth / 2 - _returnHomeText.width / 2;
 		_returnHomeText.y = 260;
 		_returnHomeText.textColor = 0xFFFFFF;
-		_returnHomeText.defaultTextFormat = new TextFormat("main", 20);
+		_returnHomeText.defaultTextFormat = _defaultFormat;
+		_returnHomeText.defaultTextFormat.size = 20;
+		_returnHomeText.embedFonts = true;
 		_returnHomeText.selectable = false;
 		_returnHomeText.text = "Return to Home";
 		_returnHomeText.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) { gotoPassage(1); } );
@@ -223,40 +275,47 @@ class GameState extends Sprite
 	{
 		removeMenu();
 		_confirm = new TextField();
-		_confirm.width = 355;
+		_confirm.width = 370;
 		_confirm.height = 25;
-		_confirm.x = stage.stageWidth / 2 - _confirm.width / 2;
-		_confirm.y = stage.stageHeight / 2 - _confirm.height / 2;
-		_confirm.textColor = 0xFFFFFF;
-		_confirm.defaultTextFormat = new TextFormat("main", 15);
+		_confirm.embedFonts = true;
+		_confirm.defaultTextFormat = _defaultFormat;
+		_confirm.defaultTextFormat.size = 15;
 		_confirm.selectable = false;
 		_confirm.text = "Are you sure you wish to overwrite existing data and save?";
 		
 		_yes = new TextField();
 		_yes.width = 45;
 		_yes.height = 30;
-		_yes.y = _confirm.y + 35;
-		_yes.x = (stage.stageWidth / 2 - _yes.width / 2) - 50;
 		_yes.selectable = false;
-		_yes.textColor = 0xFFFFFF;
-		_yes.defaultTextFormat = new TextFormat("main", 15);
+		_yes.embedFonts = true;
+		_yes.defaultTextFormat = _defaultFormat;
+		_yes.defaultTextFormat.size = 15;
 		_yes.text = "Yes";
 		_yes.addEventListener(MouseEvent.CLICK, onYesClicked);
 		
 		_no = new TextField();
 		_no.width = 45;
 		_no.height = 30;
-		_no.y = _confirm.y + 35;
-		_no.x = (stage.stageWidth / 2 - _no.width / 2) + 50;
 		_no.selectable = false;
-		_no.textColor = 0xFFFFFF;
-		_no.defaultTextFormat = new TextFormat("main", 15);
+		_no.embedFonts = true;
+		_no.defaultTextFormat = _defaultFormat;
+		_no.defaultTextFormat.size = 15;
 		_no.text = "No";
 		_no.addEventListener(MouseEvent.CLICK, onNoClicked);
 		
 		addChild(_confirm);
+		_confirm.textColor = 0xFFFFFF;
 		addChild(_yes);
+		_yes.textColor = 0xFFFFFF;
 		addChild(_no);
+		_no.textColor = 0xFFFFFF;
+		
+		_confirm.x = stage.stageWidth / 2 - _confirm.width / 2;
+		_confirm.y = stage.stageHeight / 2 - _confirm.height / 2;
+		_yes.y = _confirm.y + 35;
+		_yes.x = (stage.stageWidth / 2 - _yes.width / 2) - 50;
+		_no.y = _confirm.y + 35;
+		_no.x = (stage.stageWidth / 2 - _no.width / 2) + 50;
 	}
 	
 	private function onNoClicked(e:MouseEvent):Void
@@ -287,7 +346,7 @@ class GameState extends Sprite
 	
 	private function onTextureHover(e:MouseEvent):Void
 	{
-		_helpOptionsText.text = "Adjusts the texture quality and anti-aliasing of sprites. Scroll to change.";
+		_helpOptionsText.text = "Adjusts the quality of text and sprites. Scroll to change.";
 	}
 	
 	private function onVolumeHover(e:MouseEvent):Void
@@ -356,7 +415,9 @@ class GameState extends Sprite
 			case 2:
 				stage.quality = StageQuality.HIGH;
 			case 3:
-				stage.quality = StageQuality.BEST;
+				#if flash
+				stage.quality = StageQuality.HIGH_16X16;
+				#end
 		}
 		
 		_textureQualityText.text = "Display Quality: " + getQualityInfo();
@@ -367,11 +428,13 @@ class GameState extends Sprite
 		if (_menuText.text == "MENU") {
 			addChildAt(_menuBG, getChildIndex(_menuText) - 1);
 			openMenu();
+			_menuText.textColor = 0xFFFFFF;
 			_menuText.text = "CLOSE";
 		}
 		else {
 			removeChild(_menuBG);
 			removeMenu();
+			_menuText.textColor = 0x000000;
 			_menuText.text = "MENU";
 		}
 	}
@@ -391,13 +454,21 @@ class GameState extends Sprite
 	private function openMenu():Void
 	{
 		addChildAt(_helpOptionsText, getChildIndex(_menuText));
+		_helpOptionsText.textColor = 0xFFFFFF;
 		addChildAt(_textureQualityText, getChildIndex(_menuText));
+		_textureQualityText.textColor = 0xFFFFFF;
 		addChildAt(_musicVolumeText, getChildIndex(_menuText));
+		_musicVolumeText.textColor = 0xFFFFFF;
 		addChildAt(_sfxVolumeText, getChildIndex(_menuText));
+		_sfxVolumeText.textColor = 0xFFFFFF;
 		addChildAt(_vocalVolumeText, getChildIndex(_menuText));
+		_vocalVolumeText.textColor = 0xFFFFFF;
 		addChildAt(_saveText, getChildIndex(_menuText));
+		_saveText.textColor = 0xFFFFFF;
 		addChildAt(_loadText, getChildIndex(_menuText));
+		_loadText.textColor = 0xFFFFFF;
 		addChildAt(_returnHomeText, getChildIndex(_menuText));
+		_returnHomeText.textColor = 0xFFFFFF;
 	}
 
 	private function setupMainText():Void
@@ -409,7 +480,9 @@ class GameState extends Sprite
 		_storyText.wordWrap = true;
 		_storyText.x = stage.stageWidth / 2 - _storyText.width / 2;
 		_storyText.y = stage.stageHeight / 2 - _storyText.height / 2;
-		_storyText.defaultTextFormat = new TextFormat("main", 14);
+		_storyText.embedFonts = true;
+		_storyText.defaultTextFormat = _defaultFormat;
+		_storyText.defaultTextFormat.size = 14;
 		_storyText.addEventListener(TextEvent.LINK, linkClicked);
 		_storyText.selectable = false;
 

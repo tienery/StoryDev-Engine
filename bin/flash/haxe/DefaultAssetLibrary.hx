@@ -46,10 +46,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
+		className.set ("a/font/main-bold.ttf", __ASSET__a_font_main_bold_ttf);
+		type.set ("a/font/main-bold.ttf", AssetType.FONT);
+		className.set ("a/font/main-bolditalic.ttf", __ASSET__a_font_main_bolditalic_ttf);
+		type.set ("a/font/main-bolditalic.ttf", AssetType.FONT);
+		className.set ("a/font/main-italic.ttf", __ASSET__a_font_main_italic_ttf);
+		type.set ("a/font/main-italic.ttf", AssetType.FONT);
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
-		className.set ("a/img/MessageBox.png", __ASSET__a_img_messagebox_png);
-		type.set ("a/img/MessageBox.png", AssetType.IMAGE);
+		className.set ("a/img/bg0.png", __ASSET__a_img_bg0_png);
+		type.set ("a/img/bg0.png", AssetType.IMAGE);
+		className.set ("a/img/char0.png", __ASSET__a_img_char0_png);
+		type.set ("a/img/char0.png", AssetType.IMAGE);
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
 		className.set ("a/info/events.json", __ASSET__a_info_events_json);
@@ -65,10 +73,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#elseif html5
 		
 		var id;
+		id = "a/font/main-bold.ttf";
+		className.set (id, __ASSET__a_font_main_bold_ttf);
+		type.set (id, AssetType.FONT);
+		id = "a/font/main-bolditalic.ttf";
+		className.set (id, __ASSET__a_font_main_bolditalic_ttf);
+		type.set (id, AssetType.FONT);
+		id = "a/font/main-italic.ttf";
+		className.set (id, __ASSET__a_font_main_italic_ttf);
+		type.set (id, AssetType.FONT);
 		id = "a/font/main.ttf";
 		className.set (id, __ASSET__a_font_main_ttf);
 		type.set (id, AssetType.FONT);
-		id = "a/img/MessageBox.png";
+		id = "a/img/bg0.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "a/img/char0.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "a/info/commands.txt";
@@ -94,11 +114,23 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		var useManifest = false;
 		
+		className.set ("a/font/main-bold.ttf", __ASSET__a_font_main_bold_ttf);
+		type.set ("a/font/main-bold.ttf", AssetType.FONT);
+		
+		className.set ("a/font/main-bolditalic.ttf", __ASSET__a_font_main_bolditalic_ttf);
+		type.set ("a/font/main-bolditalic.ttf", AssetType.FONT);
+		
+		className.set ("a/font/main-italic.ttf", __ASSET__a_font_main_italic_ttf);
+		type.set ("a/font/main-italic.ttf", AssetType.FONT);
+		
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
 		
-		className.set ("a/img/MessageBox.png", __ASSET__a_img_messagebox_png);
-		type.set ("a/img/MessageBox.png", AssetType.IMAGE);
+		className.set ("a/img/bg0.png", __ASSET__a_img_bg0_png);
+		type.set ("a/img/bg0.png", AssetType.IMAGE);
+		
+		className.set ("a/img/char0.png", __ASSET__a_img_char0_png);
+		type.set ("a/img/char0.png", AssetType.IMAGE);
 		
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
@@ -731,8 +763,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if pixi
 #elseif flash
 
+@:keep class __ASSET__a_font_main_bold_ttf extends openfl.text.Font { }
+@:keep class __ASSET__a_font_main_bolditalic_ttf extends openfl.text.Font { }
+@:keep class __ASSET__a_font_main_italic_ttf extends openfl.text.Font { }
 @:keep class __ASSET__a_font_main_ttf extends openfl.text.Font { }
-@:keep class __ASSET__a_img_messagebox_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__a_img_bg0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__a_img_char0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_info_commands_txt extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_events_json extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_passages_json extends openfl.utils.ByteArray { }
@@ -742,7 +778,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 #elseif html5
 
+@:keep class __ASSET__a_font_main_bold_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-bold.ttf"; } #end }
+@:keep class __ASSET__a_font_main_bolditalic_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-bolditalic.ttf"; } #end }
+@:keep class __ASSET__a_font_main_italic_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-italic.ttf"; } #end }
 @:keep class __ASSET__a_font_main_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main.ttf"; } #end }
+
 
 
 
@@ -754,8 +794,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 #elseif (windows || mac || linux)
 
 
+@:font("assets/font/main-bold.ttf") class __ASSET__a_font_main_bold_ttf extends flash.text.Font {}
+@:font("assets/font/main-bolditalic.ttf") class __ASSET__a_font_main_bolditalic_ttf extends flash.text.Font {}
+@:font("assets/font/main-italic.ttf") class __ASSET__a_font_main_italic_ttf extends flash.text.Font {}
 @:font("assets/font/main.ttf") class __ASSET__a_font_main_ttf extends flash.text.Font {}
-@:bitmap("assets/img/MessageBox.png") class __ASSET__a_img_messagebox_png extends flash.display.BitmapData {}
+@:bitmap("assets/img/bg0.png") class __ASSET__a_img_bg0_png extends flash.display.BitmapData {}
+@:bitmap("assets/img/char0.png") class __ASSET__a_img_char0_png extends flash.display.BitmapData {}
 @:file("assets/info/commands.txt") class __ASSET__a_info_commands_txt extends flash.utils.ByteArray {}
 @:file("assets/info/events.json") class __ASSET__a_info_events_json extends flash.utils.ByteArray {}
 @:file("assets/info/passages.json") class __ASSET__a_info_passages_json extends flash.utils.ByteArray {}
