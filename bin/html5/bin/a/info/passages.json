@@ -1,0 +1,53 @@
+{
+    "title": "Test Game",
+    "passages":
+    [
+        {
+            "id": 0,
+            "title": "init",
+            "text": "x = 10; y = 10; j = 5; gotoPassage(1);"
+        },
+        {
+            "id": 1,
+            "title": "Start",
+            "text": "appendShow('Test home page:\n\n'); appendLink('Passage test', 'gotoPassage(2)'); appendShow('\n\n'); appendLink('Math', 'gotoPassage(3)'); appendShow('\n\n'); appendLink('Variables', 'gotoPassage(4)'); appendShow('\n\n'); appendLink('HTML', 'gotoPassage(5)'); appendShow('\n\n');  appendLink('Logic', 'gotoPassage(6)'); appendShow('\n\n');  appendLink('Images and sound', 'gotoPassage(7)'); appendShow('\n\n'); appendLink('Game Events', 'gotoPassage(10)');",
+            "htmlText": "This is an extra bit of text that will get show()-ed before everything else, make sure not to use show() in the 'text' property or this will be wipped.\n\n"
+        },
+        {
+            "id": 2,
+            "title": "Passages",
+            "text": "show('The fact that you are now on this passage validates that this works\n\n'); appendLink('Go Back', 'goBack()');"
+        },
+        {
+            "id": 3,
+            "title": "Math",
+            "text": "show('1+1 = ' + string(1 + 1) + '\n\n' + '4 - 3 * (4 - 2 * (6 - 3)) / 2 = ' + string(4 - 3 * (4 - 2 * (6 - 3)) / 2)); appendShow('\n\n'); appendLink('Go Back', 'goBack()');"
+        }, 
+        {
+            "id": 4,
+            "title": "Math",
+            "text": "show('x = ' + x + '\nx * 3 = ' + string(x * 3) + '\nx / 3 (rounded) = ' + string(Math.round(x / 3) + '\n\n')); appendLink('Add 1 to x', 'x++; gotoPassage(4)'); appendShow('\n\n'); appendLink('Subtract 1 to x', 'x--; gotoPassage(4)'); appendShow('\n\n'); appendLink('Go Back', 'goBack()');"
+        }, 
+        {
+            "id": 5,
+            "title": "HTML",
+            "text": "show('HTML test\n\n<i>This is i</i>\n<b>This is b</b>\n<font color=\"#FF0000\">This is font color = \"#FF0000\"</font>\n<u>This is underlined</u>\n\n'); appendLink('Go Back', 'goBack()');"
+        },
+        {
+            "id": 6,
+            "title": "Logic",
+            "text": "show('Do basic if statements work? ');if (1 < 2) appendShow('Yes ') else appendShow('No ');if (1 > 2) appendShow('No ') else appendShow('Yes ');appendShow('\nDoes && work? ');if (1 < 2 && 3 > 2) appendShow('Yes ') else appendShow('No ');if (1 > 2 && 3 > 2) appendShow('No ') else appendShow('Yes ');appendShow('\nDoes || work? ');if (1 < 2 || 3 < 2) appendShow('Yes ') else appendShow('No ');if (1 > 2 || 3 < 2) appendShow('No ') else appendShow('Yes ');appendShow('\nDoes complex compounding work? ');if (2 > 1 && (1 < 3 || 2 < 1)) appendShow('Yes ') else appendShow('No ');if ((2 > 1 && 1 < 3) || 2 < 1) appendShow('Yes ') else appendShow('No ');if ((.5 > 1 && 4 < 3) || 2 < 1) appendShow('No ') else appendShow('Yes ');appendShow('\n\n');appendLink('Go Back', 'goBack()');"
+        },
+        {
+            "id": 7,
+            "title": "Images and sound",
+            "text": "show('');appendLink('Show character image - Includes custom transition', 'transPassage(30, 30, __stageWidth * .5, __stageHeight * .9, 1); showCharImage(\"char0\", true); transCharImage(__stageWidth - 80, 30, 70, 350, 1);');appendShow('\n\n');appendLink('Remove character image', 'removeCharImage(true)');appendShow('\n\n');appendLink('Show bg image', 'showBGImage(\"bg0\")');appendShow('\n\n');appendLink('Remove bg image', 'removeBGImage()');appendShow('\n\n');appendLink('Play sound', 'playSound(\"test.mp3\", 0, 0)');appendShow('\n\n');appendLink('Go Back', 'goBack()');appendShow('\n\n');appendLink('Default Passage size', 'removeCharImage()');"
+        },
+		{
+			"id":10,
+			"title": "Game Events",
+			"text": "appendLink('Start Event', 'startEvent(1);'); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1);');appendShow('\n\n'); appendLink('Stop Event', 'stopEvent(1);'); appendShow('\n\n'); appendLink('Refresh', 'gotoPassage(10)'); appendShow('\n\n'); appendLink('Call Event', 'callEvent(0)');",
+			"htmlText": "Hello, there. This is the Game Events page.\n\nLet's see if this works. This page calls the event ID 0, which in turns starts ID 1.\n\nStarted Events are looped every time a new passage is displayed and the code is run. You can imagine being able to use a mission log or something similar to check variables for each passage.\n\n"
+		}
+    ]
+}

@@ -21,13 +21,6 @@ import openfl.display.StageQuality;
 import openfl.display.StageAlign;
 import openfl.text.Font;
 
-#if js
-@:font("a/font/main.ttf") class DefaultFont extends Font { }
-@:font("a/font/main-bold.ttf") class BoldFont extends Font { }
-@:font("a/font/main-bolditalic.ttf") class BoldItalicFont extends Font { }
-@:font("a/font/main-italic.ttf") class ItalicFont extends Font { }
-#end
-
 class GameState extends Sprite
 {
 	private var _storyText:TextField;
@@ -47,10 +40,6 @@ class GameState extends Sprite
 	private var _no:TextField;
 	private var _yes:TextField;
 	private var _confirm:TextField;
-	private var _defaultFont:Font = Assets.getFont("a/font/main.ttf");
-	private var _boldFont:Font = Assets.getFont("a/font/main-bold.ttf");
-	private var _boldItalicFont:Font = Assets.getFont("a/font/main-bolditalic.ttf");
-	private var _italicFont:Font = Assets.getFont("a/font/main-italic.ttf");
 	private var _defaultFormat:TextFormat;
 	private var _boldFormat:TextFormat;
 	private var _boldItalicFormat:TextFormat;
@@ -96,25 +85,14 @@ class GameState extends Sprite
 		_vocalVolume = 50;
 		_videoVolume = 50;
 		
-		#if js
-		_defaultFormat = new TextFormat("main");
-		_boldFormat = new TextFormat("main-bold");
-		_boldItalicFormat = new TextFormat("main-bolditalic");
-		_italicFormat = new TextFormat("main-italic");
-		#else
-		_defaultFormat = new TextFormat(_defaultFont.fontName);
-		_boldFormat = new TextFormat(_boldFont.fontName);
-		_boldItalicFormat = new TextFormat(_boldItalicFont.fontName);
-		_italicFormat = new TextFormat(_italicFont.fontName);
-		#end
+		Fonts.RegisterFonts();
+		
+		_defaultFormat = Fonts.GetFormat("main");
+		_boldFormat = Fonts.GetFormat("main-bold");
+		_boldItalicFormat = Fonts.GetFormat("main-bolditalic");
+		_italicFormat = Fonts.GetFormat("main-italic");
 		
 		stage.quality = StageQuality.HIGH;
-		#if js
-		Font.registerFont(DefaultFont);
-		Font.registerFont(BoldFont);
-		Font.registerFont(BoldItalicFont);
-		Font.registerFont(ItalicFont);
-		#end
 		
 		setupMainText();
 		setupEvents();
@@ -132,7 +110,6 @@ class GameState extends Sprite
 	
 	private function setupPauseMenu():Void
 	{
-		
 		_menuText = new TextField();
 		_menuText.width = 55;
 		_menuText.height = 20;
