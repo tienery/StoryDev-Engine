@@ -46,6 +46,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
+		className.set ("a/font/main-bold.ttf", __ASSET__a_font_main_bold_ttf);
+		type.set ("a/font/main-bold.ttf", AssetType.FONT);
+		className.set ("a/font/main-bolditalic.ttf", __ASSET__a_font_main_bolditalic_ttf);
+		type.set ("a/font/main-bolditalic.ttf", AssetType.FONT);
+		className.set ("a/font/main-italic.ttf", __ASSET__a_font_main_italic_ttf);
+		type.set ("a/font/main-italic.ttf", AssetType.FONT);
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
 		className.set ("a/img/bg0.png", __ASSET__a_img_bg0_png);
@@ -54,21 +60,35 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("a/img/char0.png", AssetType.IMAGE);
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 		className.set ("a/info/default.css", __ASSET__a_info_default_css);
 		type.set ("a/info/default.css", AssetType.TEXT);
 		className.set ("a/info/default.min.css", __ASSET__a_info_default_min_css);
 		type.set ("a/info/default.min.css", AssetType.TEXT);
+=======
+		className.set ("a/info/events.json", __ASSET__a_info_events_json);
+		type.set ("a/info/events.json", AssetType.TEXT);
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 		className.set ("a/info/passages.json", __ASSET__a_info_passages_json);
 		type.set ("a/info/passages.json", AssetType.TEXT);
+		className.set ("a/openfl.svg", __ASSET__a_openfl_svg);
+		type.set ("a/openfl.svg", AssetType.TEXT);
 		className.set ("a/sound/test.mp3", __ASSET__a_sound_test_mp3);
 		type.set ("a/sound/test.mp3", AssetType.MUSIC);
-		className.set ("main", __ASSET__assets_font_main_ttf);
-		type.set ("main", AssetType.FONT);
 		
 		
 		#elseif html5
 		
 		var id;
+		id = "a/font/main-bold.ttf";
+		className.set (id, __ASSET__a_font_main_bold_ttf);
+		type.set (id, AssetType.FONT);
+		id = "a/font/main-bolditalic.ttf";
+		className.set (id, __ASSET__a_font_main_bolditalic_ttf);
+		type.set (id, AssetType.FONT);
+		id = "a/font/main-italic.ttf";
+		className.set (id, __ASSET__a_font_main_italic_ttf);
+		type.set (id, AssetType.FONT);
 		id = "a/font/main.ttf";
 		className.set (id, __ASSET__a_font_main_ttf);
 		type.set (id, AssetType.FONT);
@@ -81,21 +101,25 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "a/info/commands.txt";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 		id = "a/info/default.css";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
 		id = "a/info/default.min.css";
+=======
+		id = "a/info/events.json";
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
 		id = "a/info/passages.json";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+		id = "a/openfl.svg";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
 		id = "a/sound/test.mp3";
 		path.set (id, id);
 		type.set (id, AssetType.MUSIC);
-		id = "main";
-		className.set (id, __ASSET__assets_font_main_ttf);
-		type.set (id, AssetType.FONT);
 		
 		
 		#else
@@ -103,6 +127,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		
+		className.set ("a/font/main-bold.ttf", __ASSET__a_font_main_bold_ttf);
+		type.set ("a/font/main-bold.ttf", AssetType.FONT);
+		
+		className.set ("a/font/main-bolditalic.ttf", __ASSET__a_font_main_bolditalic_ttf);
+		type.set ("a/font/main-bolditalic.ttf", AssetType.FONT);
+		
+		className.set ("a/font/main-italic.ttf", __ASSET__a_font_main_italic_ttf);
+		type.set ("a/font/main-italic.ttf", AssetType.FONT);
 		
 		className.set ("a/font/main.ttf", __ASSET__a_font_main_ttf);
 		type.set ("a/font/main.ttf", AssetType.FONT);
@@ -116,20 +149,25 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("a/info/commands.txt", __ASSET__a_info_commands_txt);
 		type.set ("a/info/commands.txt", AssetType.TEXT);
 		
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 		className.set ("a/info/default.css", __ASSET__a_info_default_css);
 		type.set ("a/info/default.css", AssetType.TEXT);
 		
 		className.set ("a/info/default.min.css", __ASSET__a_info_default_min_css);
 		type.set ("a/info/default.min.css", AssetType.TEXT);
+=======
+		className.set ("a/info/events.json", __ASSET__a_info_events_json);
+		type.set ("a/info/events.json", AssetType.TEXT);
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 		
 		className.set ("a/info/passages.json", __ASSET__a_info_passages_json);
 		type.set ("a/info/passages.json", AssetType.TEXT);
 		
+		className.set ("a/openfl.svg", __ASSET__a_openfl_svg);
+		type.set ("a/openfl.svg", AssetType.TEXT);
+		
 		className.set ("a/sound/test.mp3", __ASSET__a_sound_test_mp3);
 		type.set ("a/sound/test.mp3", AssetType.MUSIC);
-		
-		className.set ("main", __ASSET__assets_font_main_ttf);
-		type.set ("main", AssetType.FONT);
 		
 		
 		if (useManifest) {
@@ -747,19 +785,29 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if pixi
 #elseif flash
 
+@:keep class __ASSET__a_font_main_bold_ttf extends openfl.text.Font { }
+@:keep class __ASSET__a_font_main_bolditalic_ttf extends openfl.text.Font { }
+@:keep class __ASSET__a_font_main_italic_ttf extends openfl.text.Font { }
 @:keep class __ASSET__a_font_main_ttf extends openfl.text.Font { }
 @:keep class __ASSET__a_img_bg0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_img_char0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__a_info_commands_txt extends openfl.utils.ByteArray { }
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 @:keep class __ASSET__a_info_default_css extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_info_default_min_css extends openfl.utils.ByteArray { }
+=======
+@:keep class __ASSET__a_info_events_json extends openfl.utils.ByteArray { }
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 @:keep class __ASSET__a_info_passages_json extends openfl.utils.ByteArray { }
+@:keep class __ASSET__a_openfl_svg extends openfl.utils.ByteArray { }
 @:keep class __ASSET__a_sound_test_mp3 extends openfl.media.Sound { }
-@:keep class __ASSET__assets_font_main_ttf extends openfl.text.Font { }
 
 
 #elseif html5
 
+@:keep class __ASSET__a_font_main_bold_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-bold.ttf"; } #end }
+@:keep class __ASSET__a_font_main_bolditalic_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-bolditalic.ttf"; } #end }
+@:keep class __ASSET__a_font_main_italic_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main-italic.ttf"; } #end }
 @:keep class __ASSET__a_font_main_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "a/font/main.ttf"; } #end }
 
 
@@ -768,12 +816,16 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 @:keep class __ASSET__assets_font_main_ttf extends flash.text.Font { #if (!openfl_html5_dom) public function new () { super (); fontName = "main"; } #end }
+=======
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 
 
 #elseif (windows || mac || linux)
 
 
+<<<<<<< HEAD:Export/flash/haxe/DefaultAssetLibrary.hx
 @:font("Assets/font/main.ttf") class __ASSET__a_font_main_ttf extends flash.text.Font {}
 @:bitmap("Assets/img/bg0.png") class __ASSET__a_img_bg0_png extends flash.display.BitmapData {}
 @:bitmap("Assets/img/char0.png") class __ASSET__a_img_char0_png extends flash.display.BitmapData {}
@@ -783,6 +835,19 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("Assets/info/passages.json") class __ASSET__a_info_passages_json extends flash.utils.ByteArray {}
 @:sound("Assets/sound/test.mp3") class __ASSET__a_sound_test_mp3 extends flash.media.Sound {}
 @:font("Assets/font/main.ttf") class __ASSET__assets_font_main_ttf extends flash.text.Font {}
+=======
+@:font("assets/font/main-bold.ttf") class __ASSET__a_font_main_bold_ttf extends flash.text.Font {}
+@:font("assets/font/main-bolditalic.ttf") class __ASSET__a_font_main_bolditalic_ttf extends flash.text.Font {}
+@:font("assets/font/main-italic.ttf") class __ASSET__a_font_main_italic_ttf extends flash.text.Font {}
+@:font("assets/font/main.ttf") class __ASSET__a_font_main_ttf extends flash.text.Font {}
+@:bitmap("assets/img/bg0.png") class __ASSET__a_img_bg0_png extends flash.display.BitmapData {}
+@:bitmap("assets/img/char0.png") class __ASSET__a_img_char0_png extends flash.display.BitmapData {}
+@:file("assets/info/commands.txt") class __ASSET__a_info_commands_txt extends flash.utils.ByteArray {}
+@:file("assets/info/events.json") class __ASSET__a_info_events_json extends flash.utils.ByteArray {}
+@:file("assets/info/passages.json") class __ASSET__a_info_passages_json extends flash.utils.ByteArray {}
+@:file("assets/openfl.svg") class __ASSET__a_openfl_svg extends flash.utils.ByteArray {}
+@:sound("assets/sound/test.mp3") class __ASSET__a_sound_test_mp3 extends flash.media.Sound {}
+>>>>>>> origin/dev:bin/flash/haxe/DefaultAssetLibrary.hx
 
 
 #end

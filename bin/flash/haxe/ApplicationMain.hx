@@ -24,7 +24,7 @@ class ApplicationMain {
 		
 		
 		
-		//nme.Lib.setPackage("Company Name", "MediaMintpaw38F6BA060EBECB39DropboxAncientDomainMintPawGameFiles", "com.example.mediamintpaw38f6ba060ebecb39dropboxancientdomainmintpawgamefiles", "1.0.0");
+		//nme.Lib.setPackage("Colour Multimedia Enterprises", "StoryDev", "StoryDev", "1.0.0");
 		
 		loaderInfo = openfl.Lib.current.loaderInfo;
 		
