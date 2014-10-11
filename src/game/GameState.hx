@@ -22,7 +22,7 @@ import openfl.display.StageAlign;
 import openfl.text.Font;
 
 class GameState extends Sprite
-{
+{	
 	private var _storyText:TextField;
 	private var _storyBG:Sprite;
 	private var _storyString:String;
@@ -66,6 +66,7 @@ class GameState extends Sprite
 	private var _lastPassage:Int = -1;
 
 	private var _startingKeys:Array<Dynamic> = [];
+	private var _parsedLinks:Array<ParsedLink> = [];
 	
 	public function new ()
 	{
@@ -460,7 +461,7 @@ class GameState extends Sprite
 		_storyText.embedFonts = true;
 		_storyText.defaultTextFormat = _defaultFormat;
 		_storyText.defaultTextFormat.size = 14;
-		_storyText.addEventListener(TextEvent.LINK, linkClicked);
+		_storyText.addEventListener(MouseEvent.CLICK, onLinkClicked);
 		_storyText.selectable = false;
 
 		_storyBG = new Sprite();
@@ -525,9 +526,13 @@ class GameState extends Sprite
 		
 		var passage:Passage = Reg.getPassage(id);
 		
-		if (passage.htmlText != null) show(passage.htmlText);
+		if (passage.htmlText != null) { 
+			show(passage.htmlText); 
+		}
 		runCode(passage.text);
 		callEvents();
+		
+		_storyText.htmlText = parseLink(_storyString);
 	}
 
 	private function runCode(s:String):Void
@@ -569,7 +574,7 @@ class GameState extends Sprite
 
 	private function appendLink(s:String, l:String):Void
 	{
-		_storyString += "<a href=\'event:" + l + "\'>" + s + "</a>";
+		_storyString += "[" + s + "|" + l + "]";
 		refreshPassage();
 	}
 	
@@ -629,6 +634,51 @@ class GameState extends Sprite
 		
 		Actuate.tween(_bgImage, 2, { alpha: 1 } );
 	}
+	
+	private function parseLink(s:String):String
+	{
+		_parsedLinks.splice(0, _parsedLinks.length);
+		var pos:Int = 0;
+		var content = s;
+		while (pos < content.length) 
+		{
+			if (!(content.indexOf("[") > -1 && content.indexOf("]") > -1)) break;
+			pos = content.indexOf("[");
+			var subs = content.substring(pos + 1, content.indexOf("]"));
+			if (subs.indexOf("|") > -1)
+			{
+				var link = subs.split("|");
+				var parsedLink:ParsedLink = new ParsedLink();
+				parsedLink.code = link[1];
+				parsedLink.startIndex = s.indexOf(link[0]);
+				parsedLink.endIndex = s.indexOf(link[0].charAt(link[0].length));
+				trace("Link text: " + link[0] + "\n" + "Link code: " + link[1]);
+				_parsedLinks.push(parsedLink);
+				content = content.substr(parsedLink.endIndex + 1);
+				trace("Content: " + content);
+				s = StringTools.replace(s, parsedLink.code, "");
+			}
+		}
+		
+		s = StringTools.replace(s, "[", "");
+		s = StringTools.replace(s, "]", "");
+		s = StringTools.replace(s, "|", "");
+		
+		return s;
+	}
+	
+	private function onLinkClicked(e:MouseEvent):Void
+	{
+		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
+		for (i in 0..._parsedLinks.length)
+		{
+			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
+			{
+				runCode(_parsedLinks[i].code);
+				break;
+			}
+		}
+	}
 
 	private function removeBGImage():Void
 	{
@@ -660,7 +710,7 @@ class GameState extends Sprite
 		saveString = saveString.substr(0, saveString.length - 1);
 
 		var so:SharedObject = SharedObject.getLocal(Reg.title);
-
+		
 		so.data.save = saveString;
 		so.flush();
 	}
