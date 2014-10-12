@@ -8,9 +8,9 @@ If you wish to contribute to this project, please fork and add new features or y
 
 TODO
 ====
-Fixes to custom link parsing
-General code cleanup
-Main Menu screen - Recently played games, recently opened edits, Open Editor, Play Game features
+* Fixes to custom link parsing
+* General code cleanup
+* Main Menu screen - Recently played games, recently opened edits, Open Editor, Play Game features
 
 EDITOR
 ======
