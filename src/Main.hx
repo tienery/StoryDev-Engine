@@ -13,7 +13,6 @@ class Main extends Sprite
 
 		Reg.init();
 
-		//addChild(new MainMenu()); //Used to test the new main menu, the eventual replacement of Main.hx
 		addChild(new GameState());
 	}
 }

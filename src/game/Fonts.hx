@@ -14,7 +14,6 @@ import openfl.Assets;
 
 class Fonts
 {
-	
 	private static var _defaultFont:Font = Assets.getFont("a/font/main.ttf");
 	private static var _boldFont:Font = Assets.getFont("a/font/main-bold.ttf");
 	private static var _boldItalicFont:Font = Assets.getFont("a/font/main-bolditalic.ttf");
@@ -35,12 +34,10 @@ class Fonts
 		#end
 	}
 	
+	#if flash
 	public static function GetFormat(?title:String, ?size:Float, ?color:UInt, ?underline:Bool, ?align:TextFormatAlign):TextFormat
 	{
 		var format:TextFormat = null;
-		#if js
-		format = new TextFormat(title, size, color, null, null, underline, null, null, align);
-		#else
 		switch(title) 
 		{
 			case "main":
@@ -52,8 +49,32 @@ class Fonts
 			case "main-italic":
 				format = new TextFormat(_italicFont.fontName, size, color, null, null, underline, null, null, align);
 		}
-		#end
 		return format;
 	}
+	#else if windows | linux | mac
+	public static function GetFormat(?title:String, ?size:Float, ?color:UInt, ?underline:Bool, ?align:String):TextFormat
+	{
+		var format:TextFormat = null;
+		switch(title) 
+		{
+			case "main":
+				format = new TextFormat(_defaultFont.fontName, size, color, null, null, underline, null, null, align);
+			case "main-bold":
+				format = new TextFormat(_boldFont.fontName, size, color, null, null, underline, null, null, align);
+			case "main-bolditalic":
+				format = new TextFormat(_boldItalicFont.fontName, size, color, null, null, underline, null, null, align);
+			case "main-italic":
+				format = new TextFormat(_italicFont.fontName, size, color, null, null, underline, null, null, align);
+		}
+		return format;
+	}
+	#else if js
+	public static function GetFormat(?title:String, ?size:Float, ?color:UInt, ?underline:Bool, ?align:TextFormatAlign):TextFormat
+	{
+		var format:TextFormat = null;
+		format = new TextFormat(title, size, color, null, null, underline, null, null, align);
+		return format;
+	}
+	#end
 	
 }

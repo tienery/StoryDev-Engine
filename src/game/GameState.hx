@@ -20,6 +20,9 @@ import openfl.display.StageScaleMode;
 import openfl.display.StageQuality;
 import openfl.display.StageAlign;
 import openfl.text.Font;
+import game.LinkStrippedString;
+import openfl.utils.Timer;
+import openfl.events.TimerEvent;
 
 class GameState extends Sprite
 {	
@@ -66,7 +69,8 @@ class GameState extends Sprite
 	private var _lastPassage:Int = -1;
 
 	private var _startingKeys:Array<Dynamic> = [];
-	private var _parsedLinks:Array<ParsedLink> = [];
+	private var _parsedLinkIndexes:Array<Point> = [];
+	private var _parsedLinkCode:Array<String> = [];
 	
 	public function new ()
 	{
@@ -477,6 +481,11 @@ class GameState extends Sprite
 
 		_storyTextDims = new Point(_storyText.width, _storyText.height);
 	}
+	
+	private function randomNumber(min:Int, max:Int):Int
+	{
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 
 	private function setupHScript():Void
 	{
@@ -507,6 +516,7 @@ class GameState extends Sprite
 		_interp.variables.set("transPassage", transitionPassage);
 		_interp.variables.set("__stageWidth", stage.stageWidth);
 		_interp.variables.set("__stageHeight", stage.stageHeight);
+		_interp.variables.set("rand", randomNumber);
 
 		for (i in _interp.variables.keys())
 		{
@@ -519,7 +529,7 @@ class GameState extends Sprite
 		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 	}
 
-	private function gotoPassage(id:Int = 0):Void
+	private function gotoPassage(id:Int = 0, ?refresh:Bool):Void
 	{
 		if (_currentPassage != id) _lastPassage = _currentPassage; //Prevents refreshing wiping the _lastPassage
 		_currentPassage = id;
@@ -530,9 +540,35 @@ class GameState extends Sprite
 			show(passage.htmlText); 
 		}
 		runCode(passage.text);
-		callEvents();
+		if (!refresh)
+			callEvents();
+		else
+			callTempEvents();
 		
-		_storyText.htmlText = parseLink(_storyString);
+		var htmlPattern = new EReg("<[^>]+>", "m");
+		var original = _storyString;
+		_storyString = htmlPattern.replace(_storyString, "");
+		
+		var parsed = removeLinks(_storyString);
+		var parsedOriginal = removeLinks(original);
+		_storyText.htmlText = parsedOriginal.fullText;
+		_parsedLinkIndexes = parsed.linkIndexes;
+		_parsedLinkCode = parsed.linkCodes;
+	}
+	
+	private function removeLinks(s:String):LinkStrippedString
+	{
+		var t:LinkStrippedString=new LinkStrippedString();
+		var g:Array<String>=[];
+		var c:Array<String>=[];
+		var r:Array<String>=s.split("[[");
+		for(i in r){var u:Array<String>=i.split("]]");for(j in u)c.push(j);}
+		for(i in 0...c.length){if(i%2==1){var a:Int=c[i].indexOf("|");t.linkCodes.push(c[i].substring(a+1,c[i].length));g.push("☺"+c[i].substring(0,a));c[i]=g[g.length-1];}}
+		t.fullText=c.join("");
+		for(i in g)t.linkIndexes.push(new Point(t.fullText.indexOf(i),i.length + t.fullText.indexOf(i)));
+		for(i in 0...t.linkIndexes.length)t.linkIndexes[i].x-=i;
+		t.fullText = t.fullText.split("☺").join("");
+		return t;
 	}
 
 	private function runCode(s:String):Void
@@ -555,9 +591,12 @@ class GameState extends Sprite
      	if (e.delta < 0) _storyText.scrollV++
      	else if (e.delta > 0) _storyText.scrollV--;
 	}
-
-	private function refreshPassage():Void { _storyText.htmlText = _storyString; }
-
+	
+	private function refreshPassage():Void 
+	{ 
+		_storyText.htmlText = _storyString;
+	}
+	
 	private function show(s:String):Void
 	{
 		if (_charImage != null) removeCharImage();
@@ -574,7 +613,7 @@ class GameState extends Sprite
 
 	private function appendLink(s:String, l:String):Void
 	{
-		_storyString += "[" + s + "|" + l + "]";
+		_storyString += "[[<font color='#0000FF'>" + s + "</font>|" + l + "]]";
 		refreshPassage();
 	}
 	
@@ -635,47 +674,14 @@ class GameState extends Sprite
 		Actuate.tween(_bgImage, 2, { alpha: 1 } );
 	}
 	
-	private function parseLink(s:String):String
-	{
-		_parsedLinks.splice(0, _parsedLinks.length);
-		var pos:Int = 0;
-		var content = s;
-		while (pos < content.length) 
-		{
-			if (!(content.indexOf("[") > -1 && content.indexOf("]") > -1)) break;
-			pos = content.indexOf("[");
-			var subs = content.substring(pos + 1, content.indexOf("]"));
-			if (subs.indexOf("|") > -1)
-			{
-				var link = subs.split("|");
-				var parsedLink:ParsedLink = new ParsedLink();
-				parsedLink.code = link[1];
-				parsedLink.startIndex = s.indexOf(link[0]);
-				parsedLink.endIndex = s.indexOf(link[0].charAt(link[0].length));
-				trace("Link text: " + link[0] + "\n" + "Link code: " + link[1]);
-				_parsedLinks.push(parsedLink);
-				content = content.substr(parsedLink.endIndex + 1);
-				trace("Content: " + content);
-				s = StringTools.replace(s, parsedLink.code, "");
-			}
-		}
-		
-		s = StringTools.replace(s, "[", "");
-		s = StringTools.replace(s, "]", "");
-		s = StringTools.replace(s, "|", "");
-		
-		return s;
-	}
-	
 	private function onLinkClicked(e:MouseEvent):Void
 	{
 		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
-		for (i in 0..._parsedLinks.length)
+		for (i in 0..._parsedLinkIndexes.length)
 		{
-			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
+			if (idx >= _parsedLinkIndexes[i].x && idx < _parsedLinkIndexes[i].y)
 			{
-				runCode(_parsedLinks[i].code);
-				break;
+				runCode(_parsedLinkCode[i]);
 			}
 		}
 	}
@@ -745,10 +751,20 @@ class GameState extends Sprite
 		{
 			if (GameEvent.gameEvents[i].id == id)
 			{
-				runCode(GameEvent.gameEvents[i].code);
+				GameEvent.tempEvent.push(GameEvent.gameEvents[i]);
 				break;
 			}
 		}
+		gotoPassage(_currentPassage, true);
+	}
+	
+	private function callTempEvents():Void
+	{
+		for (i in 0...GameEvent.tempEvent.length)
+		{
+			runCode(GameEvent.tempEvent[i].code);
+		}
+		GameEvent.tempEvent.splice(0, GameEvent.tempEvent.length);
 	}
 	
 	private function callEvents():Void
@@ -775,5 +791,10 @@ class GameState extends Sprite
 		Actuate.tween(_storyText, time, { x:x, y:y, width:width, height:height} );
 		Actuate.tween(_storyBG, time, { x:x, y:y, width:width, height:height } );
 	}
+	
+}
+
+interface ExtendedBitmap
+{
 	
 }
