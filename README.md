@@ -1,6 +1,6 @@
 StoryDev-Engine
 ===============
-This is going to be an interactive story engine and editor in-one, written in Haxe on the OpenFL framework. It is designed to make writing interactive stories easier in a user-friendly way for both the author and the programmer. The engine part of this product is almost done; all that needs to be done is corrections with custom links and it will be optimised for Flash and C++ targets (the main aim of this project).
+This is going to be an interactive story engine, written in Haxe on the OpenFL framework. It is designed to make writing interactive stories easier in a user-friendly way for both the author and the programmer. The engine part of this product is almost done; all that needs to be done is corrections with custom links and it will be optimised for Flash and C++ targets (the main aim of this project).
 
 In addition, there will also be an editor. The editor is going to be designed for both the author and the programmer in mind; it will provide tools for the programmer to write code and express it in a way that is easy to read and use the in-built functions this engine comes with; in addition, it will also provide WYSIWYG interfaces for authors who do not know how to code to easily write stories without the hassle of coding.
 
