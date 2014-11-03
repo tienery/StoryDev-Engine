@@ -4,13 +4,8 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-<<<<<<< HEAD:AncientDomain.hxproj
-    <movie path="project.xml" />
-    <movie fps="30" />
-=======
     <movie path="application.xml" />
     <movie fps="60" />
->>>>>>> origin/dev:StoryDev.hxproj
     <movie width="848" />
     <movie height="480" />
     <movie version="3" />
@@ -22,22 +17,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="C:\haxetoolkit\lib\openfl\2,0,1" />
-<<<<<<< HEAD:AncientDomain.hxproj
-    <class path="C:\haxetoolkit\lib\hscript\2,0,1" />
-    <class path="C:\haxetoolkit\lib\actuate\1,7,5" />
-    <class path="Source" />
-    <class path="C:\haxetoolkit\lib\openfl\2,0,1\backends\flash" />
-    <class path="Export\flash\haxe" />
-  </classpaths>
-  <!-- Build options -->
-  <build>
-    <option directives="openfl=2.0.1&#xA;hscript=2.0.1&#xA;actuate=1.7.5&#xA;tools=1.5.7&#xA;openfl-flash&#xA;display&#xA;web" />
-    <option flashStrict="False" />
-    <option noInlineOnDebug="False" />
-    <option mainClass="ApplicationMain" />
-    <option enabledebug="False" />
-    <option additional="-dce no&#xA;--no-output&#xA;-swf-version 11.2" />
-=======
     <class path="C:\haxetoolkit\lib\actuate\1,7,5" />
     <class path="C:\haxetoolkit\lib\hscript\2,0,1" />
     <class path="C:\haxetoolkit\lib\msignal\1,2,2" />
@@ -53,7 +32,6 @@
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
     <option additional="--no-output&#xA;-swf-version 11.2" />
->>>>>>> origin/dev:StoryDev.hxproj
   </build>
   <!-- haxelib libraries -->
   <haxelib>
