@@ -14,11 +14,43 @@ import openfl.Assets;
 
 class Fonts
 {
-	private static var _defaultFont:Font = Assets.getFont("a/font/main.ttf");
-	private static var _boldFont:Font = Assets.getFont("a/font/main-bold.ttf");
-	private static var _boldItalicFont:Font = Assets.getFont("a/font/main-bolditalic.ttf");
-	private static var _italicFont:Font = Assets.getFont("a/font/main-italic.ttf");
+	private static var _defaultFont(get, null):Font;
+	private static var _boldFont(get, null):Font;
+	private static var _boldItalicFont(get, null):Font;
+	private static var _italicFont(get, null):Font;
 
+	private static function get__defaultFont()
+	{
+		if (_defaultFont == null)
+			_defaultFont = Assets.getFont("a/font/main.ttf");
+			
+		return _defaultFont;
+	}
+	
+	private static function get__boldFont()
+	{
+		if (_boldFont == null)
+			_boldFont = Assets.getFont("a/font/main-bold.ttf");
+			
+		return _boldFont;
+	}
+	
+	private static function get__boldItalicFont()
+	{
+		if (_boldItalicFont == null)
+			_boldItalicFont = Assets.getFont("a/font/main-bolditalic.ttf");
+			
+		return _boldItalicFont;
+	}
+	
+	private static function get__italicFont()
+	{
+		if (_italicFont == null)
+			_italicFont = Assets.getFont("a/font/main-bolditalic.ttf");
+			
+		return _italicFont;
+	}
+	
 	public function new() 
 	{
 		
@@ -32,6 +64,19 @@ class Fonts
 		Font.registerFont(BoldItalicFont);
 		Font.registerFont(ItalicFont);
 		#end
+	}
+	
+	public static function GetFormatName(title:String):String
+	{
+		var name = "";
+		switch(title)
+		{
+			case "main": name = _defaultFont.fontName;
+			case "main-bold": name = _boldFont.fontName;
+			case "main-italic": name = _italicFont.fontName;
+			case "main-bolditalic": name = _boldItalicFont.fontName;
+		}
+		return name;
 	}
 	
 	#if flash
@@ -51,7 +96,7 @@ class Fonts
 		}
 		return format;
 	}
-	#else if windows | linux | mac
+	#elseif sys
 	public static function GetFormat(?title:String, ?size:Float, ?color:UInt, ?underline:Bool, ?align:String):TextFormat
 	{
 		var format:TextFormat = null;
@@ -76,5 +121,29 @@ class Fonts
 		return format;
 	}
 	#end
+	
+	public static function AddFormat(type:String, format:TextFormat, ?value:Dynamic):TextFormat
+	{
+		switch (type)
+		{
+			case "bold": format.bold = true;
+			case "italic": format.italic = true;
+			case "underline": format.underline = true;
+			case "color": format.color = value;
+		}
+		return format;
+	}
+	
+	public static function RemoveFormat(type:String, format:TextFormat, ?value:Dynamic):TextFormat
+	{
+		switch (type)
+		{
+			case "bold": format.bold = false;
+			case "italic": format.italic = false;
+			case "underline": format.underline = false;
+			case "color": format.color = 0x000000;
+		}
+		return format;
+	}
 	
 }

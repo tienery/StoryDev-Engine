@@ -20,9 +20,12 @@ import openfl.display.StageScaleMode;
 import openfl.display.StageQuality;
 import openfl.display.StageAlign;
 import openfl.text.Font;
-import game.LinkStrippedString;
 import openfl.utils.Timer;
 import openfl.events.TimerEvent;
+import player03.markdownparser.MarkdownParser;
+import player03.markdownparser.MarkdownTag;
+import player03.markdownparser.ParserResult;
+import player03.markdownparser.LinkTag;
 
 class GameState extends Sprite
 {	
@@ -463,8 +466,7 @@ class GameState extends Sprite
 		_storyText.x = stage.stageWidth / 2 - _storyText.width / 2;
 		_storyText.y = stage.stageHeight / 2 - _storyText.height / 2;
 		_storyText.embedFonts = true;
-		_storyText.defaultTextFormat = _defaultFormat;
-		_storyText.defaultTextFormat.size = 14;
+		_storyText.defaultTextFormat = Fonts.GetFormat("main", 12);
 		_storyText.addEventListener(MouseEvent.CLICK, onLinkClicked);
 		_storyText.selectable = false;
 
@@ -518,6 +520,9 @@ class GameState extends Sprite
 		_interp.variables.set("__stageHeight", stage.stageHeight);
 		_interp.variables.set("rand", randomNumber);
 
+		_parser.allowJSON = true;
+		_parser.allowTypes = true;
+		
 		for (i in _interp.variables.keys())
 		{
 			_startingKeys.push(i);
@@ -531,6 +536,8 @@ class GameState extends Sprite
 
 	private function gotoPassage(id:Int = 0, ?refresh:Bool):Void
 	{
+		_parsedLinkCode = [];
+		_parsedLinkIndexes = [];
 		if (_currentPassage != id) _lastPassage = _currentPassage; //Prevents refreshing wiping the _lastPassage
 		_currentPassage = id;
 		
@@ -544,31 +551,44 @@ class GameState extends Sprite
 			callEvents();
 		else
 			callTempEvents();
-		
-		var htmlPattern = new EReg("<[^>]+>", "m");
-		var original = _storyString;
-		_storyString = htmlPattern.replace(_storyString, "");
-		
-		var parsed = removeLinks(_storyString);
-		var parsedOriginal = removeLinks(original);
-		_storyText.htmlText = parsedOriginal.fullText;
-		_parsedLinkIndexes = parsed.linkIndexes;
-		_parsedLinkCode = parsed.linkCodes;
+			
+		applyFormatting();
 	}
 	
-	private function removeLinks(s:String):LinkStrippedString
+	private var _parsedLinks:Array<ParsedLink> = [];
+	
+	private function applyFormatting():Void
 	{
-		var t:LinkStrippedString=new LinkStrippedString();
-		var g:Array<String>=[];
-		var c:Array<String>=[];
-		var r:Array<String>=s.split("[[");
-		for(i in r){var u:Array<String>=i.split("]]");for(j in u)c.push(j);}
-		for(i in 0...c.length){if(i%2==1){var a:Int=c[i].indexOf("|");t.linkCodes.push(c[i].substring(a+1,c[i].length));g.push("☺"+c[i].substring(0,a));c[i]=g[g.length-1];}}
-		t.fullText=c.join("");
-		for(i in g)t.linkIndexes.push(new Point(t.fullText.indexOf(i),i.length + t.fullText.indexOf(i)));
-		for(i in 0...t.linkIndexes.length)t.linkIndexes[i].x-=i;
-		t.fullText = t.fullText.split("☺").join("");
-		return t;
+		_parsedLinks.splice(0, _parsedLinks.length);
+		
+		var bold:String = Fonts.GetFormatName("main-bold");
+		var italics:String = Fonts.GetFormatName("main-italic");
+		var bolditalic:String = Fonts.GetFormatName("main-bolditalic");
+		var parser = new MarkdownParser([
+			new MarkdownTag("bolditalic", "\\*\\*__(.+)__\\*\\*",
+				new TextFormat(bolditalic)),
+			new MarkdownTag("bolditalic", "__\\*\\*(.+)\\*\\*__",
+				new TextFormat(bolditalic)),
+			new MarkdownTag("link", "\\[\\[(.+)\\|(.+)\\]\\]",
+				LinkTag.getTextFormat(), 1),
+			new MarkdownTag("bold", "\\*\\*(.+)\\*\\*",
+				new TextFormat(bold)),
+			new MarkdownTag("italic", "__(.+)__",
+				new TextFormat(italics))
+		]);
+
+		var result:ParserResult = parser.parse(_storyString);
+		result.apply(_storyText);
+
+		for (annotation in result.annotations) {
+			if(annotation.tagName == "link") {
+				var parsedLink:ParsedLink = new ParsedLink();
+				parsedLink.startIndex = annotation.beginIndex;
+				parsedLink.endIndex = annotation.endIndex;
+				parsedLink.code = annotation.extraData[0];
+				_parsedLinks.push(parsedLink);
+			}
+		}
 	}
 
 	private function runCode(s:String):Void
@@ -594,7 +614,7 @@ class GameState extends Sprite
 	
 	private function refreshPassage():Void 
 	{ 
-		_storyText.htmlText = _storyString;
+		_storyText.text = _storyString;
 	}
 	
 	private function show(s:String):Void
@@ -613,7 +633,7 @@ class GameState extends Sprite
 
 	private function appendLink(s:String, l:String):Void
 	{
-		_storyString += "[[<font color='#0000FF'>" + s + "</font>|" + l + "]]";
+		_storyString += "[[" + s + "|" + l + "]]";
 		refreshPassage();
 	}
 	
@@ -677,11 +697,12 @@ class GameState extends Sprite
 	private function onLinkClicked(e:MouseEvent):Void
 	{
 		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
-		for (i in 0..._parsedLinkIndexes.length)
+		
+		for (i in 0..._parsedLinks.length)
 		{
-			if (idx >= _parsedLinkIndexes[i].x && idx < _parsedLinkIndexes[i].y)
+			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
 			{
-				runCode(_parsedLinkCode[i]);
+				runCode(_parsedLinks[i].code);
 			}
 		}
 	}

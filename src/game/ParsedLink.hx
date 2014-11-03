@@ -1,11 +1,19 @@
 package game;
 
+/**
+ * ...
+ * @author Colour Multimedia Enterprises
+ */
 class ParsedLink
 {
-	public function new() { }
 	
+	public var code:String;
 	public var startIndex:Int;
 	public var endIndex:Int;
-	public var code:String;
 
+	public function new() 
+	{
+		
+	}
+	
 }
