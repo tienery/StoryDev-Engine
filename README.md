@@ -24,6 +24,6 @@ This engine uses the Open Sans font, using the [Apache License v2.0](http://www.
 If you wish, you can copy the following text into a TXT file (replacing anything in square brackets where necessary):
 `This game uses the Open Sans font, using the Apache License v2.0 found here: http://www.apache.org/licenses/LICENSE-2.0.html. This game does not use any other fonts than those otherwise noted in this document, and have the permission by all given licenses to redistribute this game for [commercial/non-commercial] purposes.`
 
-Special Thanks to [Player-03](https://github.com/player-03) for his [Markdown Parser](https://github.com/player-03/MarkdownParser) which has helped create this project.
+Special Thanks to [Player-03](https://github.com/player-03) for his [Markdown Parser](https://github.com/player-03/MarkdownParser) which has helped solve the consist issues this project had with parsing and applying formatting to text and links.
 
 Thank you [MintPaw](https://github.com/MintPaw) for his help starting the project.
