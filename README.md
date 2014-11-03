@@ -9,7 +9,21 @@ If you wish to contribute to this project, please fork and add new features or y
 TODO
 ====
 * General code cleanup
+* Add functionality for adding Bitmap images at any particular location and size, also allowing for events such as onClick, onMouseDown, onMouseUp, etc. to be called via Game Events.
+* Add functionality for a selectable TextField that can be edited with the ability to call short-hand functions. For example, "-p 1" could be the shorthand version for "gotoPassage(1);". In addition, functions may be added/removed at the developer's leisure. This would use a separate JSON file, maybe "console.json"?
+* Add more formatting options: Underline, Bulleted List, Size, Numbered List, maybe others?
 
 EDITOR
 ======
 The editor is going to be a separate project entirely, mainly so that game developers/writers can have the freedom to redistribute this source code and any compiled versions without also redistributing the editor as well.
+
+CREDITS
+=======
+This engine uses the Open Sans font, using the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0.html), which means you can redistribute a copy of this engine as long as you make credit to the usage of this font. You may also compile this engine into bytecode or binary format, and if necessary, you may need to make a reference to the license of this font, or any other font you decide to use otherwise.
+
+If you wish, you can copy the following text into a TXT file (replacing anything in square brackets where necessary):
+`This game uses the Open Sans font, using the Apache License v2.0 found here: http://www.apache.org/licenses/LICENSE-2.0.html. This game does not use any other fonts than those otherwise noted in this document, and have the permission by all given licenses to redistribute this game for [commercial/non-commercial] purposes.`
+
+Special Thanks to [Player-03](https://github.com/player-03) for his [Markdown Parser](https://github.com/player-03/MarkdownParser) which has helped create this project.
+
+Thank you [MintPaw](https://github.com/MintPaw) for his help starting the project.
