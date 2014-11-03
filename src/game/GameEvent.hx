@@ -12,6 +12,7 @@ class GameEvent
 	
 	public static var gameEvents:Array<GameEvent> = [];
 	public static var queuedEvents:Array<GameEvent> = [];
+	public static var tempEvent:Array<GameEvent> = [];
 	
 	public var id:Int;
 	public var code:String;

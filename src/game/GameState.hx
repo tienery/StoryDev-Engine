@@ -20,16 +20,15 @@ import openfl.display.StageScaleMode;
 import openfl.display.StageQuality;
 import openfl.display.StageAlign;
 import openfl.text.Font;
-
-#if js
-@:font("a/font/main.ttf") class DefaultFont extends Font { }
-@:font("a/font/main-bold.ttf") class BoldFont extends Font { }
-@:font("a/font/main-bolditalic.ttf") class BoldItalicFont extends Font { }
-@:font("a/font/main-italic.ttf") class ItalicFont extends Font { }
-#end
+import openfl.utils.Timer;
+import openfl.events.TimerEvent;
+import player03.markdownparser.MarkdownParser;
+import player03.markdownparser.MarkdownTag;
+import player03.markdownparser.ParserResult;
+import player03.markdownparser.LinkTag;
 
 class GameState extends Sprite
-{
+{	
 	private var _storyText:TextField;
 	private var _storyBG:Sprite;
 	private var _storyString:String;
@@ -47,10 +46,6 @@ class GameState extends Sprite
 	private var _no:TextField;
 	private var _yes:TextField;
 	private var _confirm:TextField;
-	private var _defaultFont:Font = Assets.getFont("a/font/main.ttf");
-	private var _boldFont:Font = Assets.getFont("a/font/main-bold.ttf");
-	private var _boldItalicFont:Font = Assets.getFont("a/font/main-bolditalic.ttf");
-	private var _italicFont:Font = Assets.getFont("a/font/main-italic.ttf");
 	private var _defaultFormat:TextFormat;
 	private var _boldFormat:TextFormat;
 	private var _boldItalicFormat:TextFormat;
@@ -77,6 +72,8 @@ class GameState extends Sprite
 	private var _lastPassage:Int = -1;
 
 	private var _startingKeys:Array<Dynamic> = [];
+	private var _parsedLinkIndexes:Array<Point> = [];
+	private var _parsedLinkCode:Array<String> = [];
 	
 	public function new ()
 	{
@@ -96,25 +93,14 @@ class GameState extends Sprite
 		_vocalVolume = 50;
 		_videoVolume = 50;
 		
-		#if js
-		_defaultFormat = new TextFormat("main");
-		_boldFormat = new TextFormat("main-bold");
-		_boldItalicFormat = new TextFormat("main-bolditalic");
-		_italicFormat = new TextFormat("main-italic");
-		#else
-		_defaultFormat = new TextFormat(_defaultFont.fontName);
-		_boldFormat = new TextFormat(_boldFont.fontName);
-		_boldItalicFormat = new TextFormat(_boldItalicFont.fontName);
-		_italicFormat = new TextFormat(_italicFont.fontName);
-		#end
+		Fonts.RegisterFonts();
+		
+		_defaultFormat = Fonts.GetFormat("main");
+		_boldFormat = Fonts.GetFormat("main-bold");
+		_boldItalicFormat = Fonts.GetFormat("main-bolditalic");
+		_italicFormat = Fonts.GetFormat("main-italic");
 		
 		stage.quality = StageQuality.HIGH;
-		#if js
-		Font.registerFont(DefaultFont);
-		Font.registerFont(BoldFont);
-		Font.registerFont(BoldItalicFont);
-		Font.registerFont(ItalicFont);
-		#end
 		
 		setupMainText();
 		setupEvents();
@@ -132,7 +118,6 @@ class GameState extends Sprite
 	
 	private function setupPauseMenu():Void
 	{
-		
 		_menuText = new TextField();
 		_menuText.width = 55;
 		_menuText.height = 20;
@@ -481,9 +466,8 @@ class GameState extends Sprite
 		_storyText.x = stage.stageWidth / 2 - _storyText.width / 2;
 		_storyText.y = stage.stageHeight / 2 - _storyText.height / 2;
 		_storyText.embedFonts = true;
-		_storyText.defaultTextFormat = _defaultFormat;
-		_storyText.defaultTextFormat.size = 14;
-		_storyText.addEventListener(TextEvent.LINK, linkClicked);
+		_storyText.defaultTextFormat = Fonts.GetFormat("main", 12);
+		_storyText.addEventListener(MouseEvent.CLICK, onLinkClicked);
 		_storyText.selectable = false;
 
 		_storyBG = new Sprite();
@@ -498,6 +482,11 @@ class GameState extends Sprite
 		addChild(_storyText);
 
 		_storyTextDims = new Point(_storyText.width, _storyText.height);
+	}
+	
+	private function randomNumber(min:Int, max:Int):Int
+	{
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
 	private function setupHScript():Void
@@ -529,7 +518,11 @@ class GameState extends Sprite
 		_interp.variables.set("transPassage", transitionPassage);
 		_interp.variables.set("__stageWidth", stage.stageWidth);
 		_interp.variables.set("__stageHeight", stage.stageHeight);
+		_interp.variables.set("rand", randomNumber);
 
+		_parser.allowJSON = true;
+		_parser.allowTypes = true;
+		
 		for (i in _interp.variables.keys())
 		{
 			_startingKeys.push(i);
@@ -541,16 +534,61 @@ class GameState extends Sprite
 		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 	}
 
-	private function gotoPassage(id:Int = 0):Void
+	private function gotoPassage(id:Int = 0, ?refresh:Bool):Void
 	{
+		_parsedLinkCode = [];
+		_parsedLinkIndexes = [];
 		if (_currentPassage != id) _lastPassage = _currentPassage; //Prevents refreshing wiping the _lastPassage
 		_currentPassage = id;
 		
 		var passage:Passage = Reg.getPassage(id);
 		
-		if (passage.htmlText != null) show(passage.htmlText);
+		if (passage.htmlText != null) { 
+			show(passage.htmlText); 
+		}
 		runCode(passage.text);
-		callEvents();
+		if (!refresh)
+			callEvents();
+		else
+			callTempEvents();
+			
+		applyFormatting();
+	}
+	
+	private var _parsedLinks:Array<ParsedLink> = [];
+	
+	private function applyFormatting():Void
+	{
+		_parsedLinks.splice(0, _parsedLinks.length);
+		
+		var bold:String = Fonts.GetFormatName("main-bold");
+		var italics:String = Fonts.GetFormatName("main-italic");
+		var bolditalic:String = Fonts.GetFormatName("main-bolditalic");
+		var parser = new MarkdownParser([
+			new MarkdownTag("bolditalic", "\\*\\*__(.+)__\\*\\*",
+				new TextFormat(bolditalic)),
+			new MarkdownTag("bolditalic", "__\\*\\*(.+)\\*\\*__",
+				new TextFormat(bolditalic)),
+			new MarkdownTag("link", "\\[\\[(.+)\\|(.+)\\]\\]",
+				LinkTag.getTextFormat(), 1),
+			new MarkdownTag("bold", "\\*\\*(.+)\\*\\*",
+				new TextFormat(bold)),
+			new MarkdownTag("italic", "__(.+)__",
+				new TextFormat(italics))
+		]);
+
+		var result:ParserResult = parser.parse(_storyString);
+		result.apply(_storyText);
+
+		for (annotation in result.annotations) {
+			if(annotation.tagName == "link") {
+				var parsedLink:ParsedLink = new ParsedLink();
+				parsedLink.startIndex = annotation.beginIndex;
+				parsedLink.endIndex = annotation.endIndex;
+				parsedLink.code = annotation.extraData[0];
+				_parsedLinks.push(parsedLink);
+			}
+		}
 	}
 
 	private function runCode(s:String):Void
@@ -573,9 +611,12 @@ class GameState extends Sprite
      	if (e.delta < 0) _storyText.scrollV++
      	else if (e.delta > 0) _storyText.scrollV--;
 	}
-
-	private function refreshPassage():Void { _storyText.htmlText = _storyString; }
-
+	
+	private function refreshPassage():Void 
+	{ 
+		_storyText.text = _storyString;
+	}
+	
 	private function show(s:String):Void
 	{
 		if (_charImage != null) removeCharImage();
@@ -592,7 +633,7 @@ class GameState extends Sprite
 
 	private function appendLink(s:String, l:String):Void
 	{
-		_storyString += "<a href=\'event:" + l + "\'>" + s + "</a>";
+		_storyString += "[[" + s + "|" + l + "]]";
 		refreshPassage();
 	}
 	
@@ -652,6 +693,19 @@ class GameState extends Sprite
 		
 		Actuate.tween(_bgImage, 2, { alpha: 1 } );
 	}
+	
+	private function onLinkClicked(e:MouseEvent):Void
+	{
+		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
+		
+		for (i in 0..._parsedLinks.length)
+		{
+			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
+			{
+				runCode(_parsedLinks[i].code);
+			}
+		}
+	}
 
 	private function removeBGImage():Void
 	{
@@ -683,7 +737,7 @@ class GameState extends Sprite
 		saveString = saveString.substr(0, saveString.length - 1);
 
 		var so:SharedObject = SharedObject.getLocal(Reg.title);
-
+		
 		so.data.save = saveString;
 		so.flush();
 	}
@@ -718,10 +772,20 @@ class GameState extends Sprite
 		{
 			if (GameEvent.gameEvents[i].id == id)
 			{
-				runCode(GameEvent.gameEvents[i].code);
+				GameEvent.tempEvent.push(GameEvent.gameEvents[i]);
 				break;
 			}
 		}
+		gotoPassage(_currentPassage, true);
+	}
+	
+	private function callTempEvents():Void
+	{
+		for (i in 0...GameEvent.tempEvent.length)
+		{
+			runCode(GameEvent.tempEvent[i].code);
+		}
+		GameEvent.tempEvent.splice(0, GameEvent.tempEvent.length);
 	}
 	
 	private function callEvents():Void
@@ -748,5 +812,10 @@ class GameState extends Sprite
 		Actuate.tween(_storyText, time, { x:x, y:y, width:width, height:height} );
 		Actuate.tween(_storyBG, time, { x:x, y:y, width:width, height:height } );
 	}
+	
+}
+
+interface ExtendedBitmap
+{
 	
 }
