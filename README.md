@@ -8,10 +8,8 @@ If you wish to contribute to this project, please fork and add new features or y
 
 TODO
 ====
-* Fixes to custom link parsing
 * General code cleanup
-* Main Menu screen - Recently played games, recently opened edits, Open Editor, Play Game features
 
 EDITOR
 ======
-The editor will consist of a lot of features that will go into extensive testing and details. Since it is going to be difficult to complete in a reasonable time and show you how it is going, contributions to the editor will be left out of the dev branch and put into the editor branch.
+The editor is going to be a separate project entirely, mainly so that game developers/writers can have the freedom to redistribute this source code and any compiled versions without also redistributing the editor as well.
