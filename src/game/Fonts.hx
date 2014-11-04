@@ -46,7 +46,7 @@ class Fonts
 	private static function get__italicFont()
 	{
 		if (_italicFont == null)
-			_italicFont = Assets.getFont("a/font/main-bolditalic.ttf");
+			_italicFont = Assets.getFont("a/font/main-italic.ttf");
 			
 		return _italicFont;
 	}

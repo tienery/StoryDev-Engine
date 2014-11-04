@@ -75,6 +75,33 @@ class GameState extends Sprite
 	private var _parsedLinkIndexes:Array<Point> = [];
 	private var _parsedLinkCode:Array<String> = [];
 	
+	private var _linkColour:UInt;
+	public var linkColour(get, set):UInt;
+	private var _defaultColour:UInt;
+	public var defaultColour(get, set):UInt;
+	private var _defaultFont:String;
+	public var defaultFont(get, set):String;
+	private var _defaultFontSize:Float;
+	public var defaultFontSize(get, set):Float;
+	private var _linkFont:String;
+	public var linkFont(get, set):String;
+	private var _linkFontSize:Float;
+	public var linkFontSize(get, set):Float;
+	private var _menuTextColor:UInt;
+	
+	function get_linkColour() return _linkColour;
+	function set_linkColour(value) return _linkColour = value;
+	function get_defaultColour() return _defaultColour;
+	function set_defaultColour(value) return _defaultColour = value;
+	function get_defaultFont() return _defaultFont;
+	function set_defaultFont(value) return _defaultFont = value;
+	function get_defaultFontSize() return _defaultFontSize;
+	function set_defaultFontSize(value) return _defaultFontSize = value;
+	function get_linkFont() return _linkFont;
+	function set_linkFont(value) return _linkFont = value;
+	function get_linkFontSize() return _linkFontSize;
+	function set_linkFontSize(value) return _linkFontSize = value;
+	
 	public function new ()
 	{
 		super();
@@ -87,6 +114,14 @@ class GameState extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		stage.addEventListener(Event.RESIZE, onStageResize);
 
+		_defaultColour = 0x000000;
+		_linkColour = 0x0000FF;
+		_linkFont = "main";
+		_linkFontSize = 12;
+		_defaultFont = "main";
+		_defaultFontSize = 12;
+		_menuTextColor = 0x000000;
+		
 		_textureQuality = 2;
 		_musicVolume = 50;
 		_sfxVolume = 50;
@@ -107,7 +142,7 @@ class GameState extends Sprite
 		setupHScript();
 		GameEvent.initEvents();
 		setupPauseMenu();
-
+		
 		gotoPassage();
 	}
 	
@@ -127,11 +162,12 @@ class GameState extends Sprite
 		_menuText.defaultTextFormat = _defaultFormat;
 		_menuText.defaultTextFormat.size = 16;
 		_menuText.text = "MENU";
+		_menuText.textColor = _menuTextColor;
 		_menuText.embedFonts = true;
 		_menuText.addEventListener(MouseEvent.CLICK, showPauseMenu);
 		
 		_menuBG = new Sprite();
-		_menuBG.graphics.beginFill(0, .6);
+		_menuBG.graphics.beginFill(0, 1);
 		_menuBG.graphics.drawRect(0, 0, 1, 1);
 		_menuBG.x = 0;
 		_menuBG.y = 0;
@@ -248,6 +284,7 @@ class GameState extends Sprite
 		_returnHomeText.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) { gotoPassage(1); } );
 		_returnHomeText.addEventListener(MouseEvent.MOUSE_OVER, function(e:MouseEvent) { _helpOptionsText.text = "Return to the Home passage. Does not reset data."; } );
 		
+		addChild(new Sprite());
 		addChild(_menuText);
 	}
 	
@@ -419,7 +456,7 @@ class GameState extends Sprite
 		else {
 			removeChild(_menuBG);
 			removeMenu();
-			_menuText.textColor = 0x000000;
+			_menuText.textColor = _menuTextColor;
 			_menuText.text = "MENU";
 		}
 	}
@@ -519,6 +556,11 @@ class GameState extends Sprite
 		_interp.variables.set("__stageWidth", stage.stageWidth);
 		_interp.variables.set("__stageHeight", stage.stageHeight);
 		_interp.variables.set("rand", randomNumber);
+		_interp.variables.set("setLinkFormat", setLinkFormat);
+		_interp.variables.set("setTextFormat", setTextFormat);
+		_interp.variables.set("setBGColor", setBGColour);
+		_interp.variables.set("setPassageColor", setPassageColour);
+		_interp.variables.set("setMenuTextColor", setMenuTextColour);
 
 		_parser.allowJSON = true;
 		_parser.allowTypes = true;
@@ -527,6 +569,43 @@ class GameState extends Sprite
 		{
 			_startingKeys.push(i);
 		}
+	}
+	
+	private function setLinkFormat(?name:String, ?size:Float, ?colour:UInt):Void
+	{
+		linkColour = colour != null ? colour : 0x0000FF;
+		linkFont = name != null ? name : "main";
+		linkFontSize = size != null ? size : 12;
+	}
+	
+	private function setTextFormat(?name:String, ?size:Float, ?colour:UInt):Void
+	{
+		defaultColour = colour != null ? colour : 0x000000;
+		defaultFont = name != null ? name : "main";
+		defaultFontSize = size != null ? size : 12;
+		updateColours();
+	}
+	
+	private function setBGColour(colour:UInt):Void
+	{
+		stage.color = colour;
+	}
+	
+	private function setMenuTextColour(colour:UInt):Void
+	{
+		_menuTextColor = colour;
+		_menuText.textColor = _menuTextColor;
+	}
+	
+	private function setPassageColour(colour:UInt, transparency:Float):Void
+	{
+		_storyBG.graphics.beginFill(colour, transparency);
+		_storyBG.graphics.drawRect(0, 0, 1, 1);
+	}
+	
+	private function updateColours():Void
+	{
+		_storyText.defaultTextFormat = Fonts.GetFormat(defaultFont, defaultFontSize, defaultColour, false);
 	}
 
 	private function setupEvents():Void
@@ -566,15 +645,15 @@ class GameState extends Sprite
 		var bolditalic:String = Fonts.GetFormatName("main-bolditalic");
 		var parser = new MarkdownParser([
 			new MarkdownTag("bolditalic", "\\*\\*__(.+)__\\*\\*",
-				new TextFormat(bolditalic)),
+				new TextFormat(bolditalic, defaultFontSize, defaultColour)),
 			new MarkdownTag("bolditalic", "__\\*\\*(.+)\\*\\*__",
-				new TextFormat(bolditalic)),
-			new MarkdownTag("link", "\\[\\[(.+)\\|(.+)\\]\\]",
-				LinkTag.getTextFormat(), 1),
+				new TextFormat(bolditalic, defaultFontSize, defaultColour)),
 			new MarkdownTag("bold", "\\*\\*(.+)\\*\\*",
-				new TextFormat(bold)),
+				new TextFormat(bold, defaultFontSize, defaultColour)),
 			new MarkdownTag("italic", "__(.+)__",
-				new TextFormat(italics))
+				new TextFormat(italics, defaultFontSize, defaultColour)),
+			new MarkdownTag("link", "\\[\\[(.+)\\|(.+)\\]\\]",
+				new TextFormat(Fonts.GetFormatName(linkFont), linkFontSize, linkColour, null, null, true), 1)
 		]);
 
 		var result:ParserResult = parser.parse(_storyString);
@@ -697,12 +776,11 @@ class GameState extends Sprite
 	private function onLinkClicked(e:MouseEvent):Void
 	{
 		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
-		
 		for (i in 0..._parsedLinks.length)
 		{
 			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
 			{
-				runCode(_parsedLinks[i].code);
+					runCode(_parsedLinks[i].code);
 			}
 		}
 	}
