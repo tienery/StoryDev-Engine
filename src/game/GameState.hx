@@ -253,7 +253,7 @@ class GameState extends Sprite
 		_saveText.selectable = false;
 		_saveText.embedFonts = true;
 		_saveText.text = "Save Game";
-		_saveText.addEventListener(MouseEvent.CLICK, saveGame); 
+		_saveText.addEventListener(MouseEvent.CLICK, saveGame);
 		_saveText.addEventListener(MouseEvent.MOUSE_OVER, onSaveHover);
 		
 		_loadText = new TextField();
@@ -571,18 +571,18 @@ class GameState extends Sprite
 		}
 	}
 	
-	private function setLinkFormat(?name:String, ?size:Float, ?colour:UInt):Void
+	private function setLinkFormat(?name:String = "main", ?size:Float = 12, ?colour:UInt = 0x0000FF):Void
 	{
-		linkColour = colour != null ? colour : 0x0000FF;
-		linkFont = name != null ? name : "main";
-		linkFontSize = size != null ? size : 12;
+		linkColour = colour;
+		linkFont = name;
+		linkFontSize = size;
 	}
 	
-	private function setTextFormat(?name:String, ?size:Float, ?colour:UInt):Void
+	private function setTextFormat(?name:String = "main", ?size:Float = 12, ?colour:UInt = 0x000000):Void
 	{
-		defaultColour = colour != null ? colour : 0x000000;
-		defaultFont = name != null ? name : "main";
-		defaultFontSize = size != null ? size : 12;
+		defaultColour = colour;
+		defaultFont = name;
+		defaultFontSize = size;
 		updateColours();
 	}
 	
@@ -626,10 +626,7 @@ class GameState extends Sprite
 			show(passage.htmlText); 
 		}
 		runCode(passage.text);
-		if (!refresh)
-			callEvents();
-		else
-			callTempEvents();
+		callEvents();
 			
 		applyFormatting();
 	}
@@ -775,7 +772,8 @@ class GameState extends Sprite
 	
 	private function onLinkClicked(e:MouseEvent):Void
 	{
-		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);
+		var idx:Int = e.currentTarget.getCharIndexAtPoint(e.localX, e.localY);		
+		
 		for (i in 0..._parsedLinks.length)
 		{
 			if (idx >= _parsedLinks[i].startIndex && idx < _parsedLinks[i].endIndex)
@@ -850,20 +848,10 @@ class GameState extends Sprite
 		{
 			if (GameEvent.gameEvents[i].id == id)
 			{
-				GameEvent.tempEvent.push(GameEvent.gameEvents[i]);
+				runCode(GameEvent.gameEvents[i].code);
 				break;
 			}
 		}
-		gotoPassage(_currentPassage, true);
-	}
-	
-	private function callTempEvents():Void
-	{
-		for (i in 0...GameEvent.tempEvent.length)
-		{
-			runCode(GameEvent.tempEvent[i].code);
-		}
-		GameEvent.tempEvent.splice(0, GameEvent.tempEvent.length);
 	}
 	
 	private function callEvents():Void
@@ -890,10 +878,5 @@ class GameState extends Sprite
 		Actuate.tween(_storyText, time, { x:x, y:y, width:width, height:height} );
 		Actuate.tween(_storyBG, time, { x:x, y:y, width:width, height:height } );
 	}
-	
-}
-
-interface ExtendedBitmap
-{
 	
 }

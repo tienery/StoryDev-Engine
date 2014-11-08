@@ -9,7 +9,7 @@ class Reg
 {
 
 	public static var title:String;
-
+	
 	private static var _passages:Array<Passage> = [];
 
 	public static function init():Void
@@ -17,15 +17,14 @@ class Reg
 		var passageString:String = Assets.getText("a/info/passages.json");
 		var passageJSON:Dynamic = Json.parse(passageString);
 
-		title = passageJSON.title.split(" ").join("");
-
-		for (i in 0...passageJSON.passages.length)
+		for (i in 0...passageJSON.length)
 		{
+			if (i == 0)
+				title = passageJSON[i].title;
 			var p:Passage = new Passage();
-			p.id = passageJSON.passages[i].id;
-			p.title = passageJSON.passages[i].title;
-			p.text = passageJSON.passages[i].text;
-			p.htmlText = passageJSON.passages[i].htmlText;
+			p.id = passageJSON[i].id;
+			p.text = passageJSON[i].text;
+			p.htmlText = passageJSON[i].htmlText;
 
 			_passages.push(p);
 		}

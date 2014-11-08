@@ -16,9 +16,7 @@
 	<source path="src" />
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
-	<haxelib name="hscript" />
-	<haxelib name="msignal" />
-	
+	<haxelib name="hscript" />	
 	<!-- assets -->
 	<icon path="assets/openfl.svg" />
 	<assets path="assets" rename="a" />

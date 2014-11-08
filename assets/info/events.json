@@ -1,15 +1,10 @@
-{
-	"events": 
-	[
-		{
-			"id":0,
-			"code":"appendShow('\nY is ' + y + ' and j is ' + j + '\n');"
-		},
-		{
-			"id":1,
-			"code":"y += 3;j += 4;appendShow('\nY is ' + y + ' and j is ' + j + '\n');"
-		}
-		
-	]
-	
-}
+[
+	{
+		"id":0,
+		"code":"appendShow('\nY is ' + y + ' and j is ' + j + '\n');"
+	},
+	{
+		"id":1,
+		"code":"y += 3; \nj += 4; \nappendShow('\nY is ' + y + ' and j is ' + j + '\n');"
+	}
+]

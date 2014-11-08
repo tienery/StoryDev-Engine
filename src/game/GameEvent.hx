@@ -12,7 +12,6 @@ class GameEvent
 	
 	public static var gameEvents:Array<GameEvent> = [];
 	public static var queuedEvents:Array<GameEvent> = [];
-	public static var tempEvent:Array<GameEvent> = [];
 	
 	public var id:Int;
 	public var code:String;
@@ -25,11 +24,11 @@ class GameEvent
 	public static function initEvents():Void 
 	{
 		var eventsString:Dynamic = Json.parse(Assets.getText("a/info/events.json"));
-		for (i in 0...eventsString.events.length) 
+		for (i in 0...eventsString.length) 
 		{
 			var event:GameEvent = new GameEvent();
-			event.id = eventsString.events[i].id;
-			event.code = eventsString.events[i].code;
+			event.id = eventsString[i].id;
+			event.code = eventsString[i].code;
 			gameEvents.push(event);
 		}
 	}

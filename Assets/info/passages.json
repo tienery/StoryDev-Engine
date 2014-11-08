@@ -1,11 +1,8 @@
-{
-    "title": "Test Game",
-    "passages":
-    [
+[
         {
             "id": 0,
-            "title": "init",
-            "text": "myJsonString = '{ \"message\":\"This is **some** text.\" }'; myObject = parseJson(myJsonString); x = 10; y = 10; j = 5; jsonArray = parseJson('{\"id\":0, \"text\":\"Some Text\", \"array\":[0, 4, 18] }'); gotoPassage(1);"
+            "title": "Test Application",
+            "text": "setBGColor(0x000000); setMenuTextColor(0xFFFFFF); setTextFormat('main', 12, 0xFFFFFF); setLinkFormat('main-bold', 12, 0x00FFFF); setPassageColor(0xFFFFFF, .15); myJsonString = '{ \"message\":\"This is **some** text.\" }'; myObject = parseJson(myJsonString); x = 10; y = 10; j = 5; jsonArray = parseJson('{\"id\":0, \"text\":\"Some Text\", \"array\":[0, 4, 18] }'); gotoPassage(1);"
         },
         {
             "id": 1,
@@ -46,7 +43,7 @@
 		{
 			"id":10,
 			"title": "Game Events",
-			"text": "appendLink('Start Event', 'startEvent(1);'); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1);');appendShow('\n\n'); appendLink('Stop Event', 'stopEvent(1);'); appendShow('\n\n'); appendLink('Refresh', 'gotoPassage(10)'); appendShow('\n\n'); appendLink('Call Event', 'callEvent(0);');",
+			"text": "appendLink('Start Event', 'startEvent(1);'); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1);');appendShow('\n\n'); appendLink('Stop Event', 'stopEvent(1);'); appendShow('\n\n'); appendLink('Refresh', 'gotoPassage(10)'); appendShow('\n\n');",
 			"htmlText": "Hello, there. This is the Game Events page.\n\nLet's see if this works. This page calls the event ID 0, which in turns starts ID 1.\n\nStarted Events are looped every time a new passage is displayed and the code is run. You can imagine being able to use a mission log or something similar to check variables for each passage.\n\n"
 		},
 		{
@@ -54,5 +51,4 @@
 			"title":"JSON Test",
 			"text": "show('Here is some JSON we are going to test.\n\n**Note: Only Strings and Floats get saved by the Save and Load functions in the Options menu.**'); appendShow('\n\n'); appendShow('The ID is: ' + jsonArray.id + ', the text: ' + jsonArray.text + ', and the third item in the array is: ' + jsonArray.array[2]); appendShow('\n\nThe JSON when stringified: ' + stringifyJson(jsonArray)); appendShow('\n\n'); appendShow(myObject.message + '\n\n'); myObject.array = [0, 4]; appendShow(myObject.array[1] + '\n\n'); myObject.anotherObject = { message: \"The result of 4 + 6 is: \", code: 4 + 6 }; data = myObject.anotherObject; appendShow(data.message + data.code); appendShow('\n\n'); appendShow(\"New JSON Structure: \" + stringifyJson(myObject)); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1)'); "
 		}
-    ]
-}
+]
