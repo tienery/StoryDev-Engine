@@ -561,6 +561,7 @@ class GameState extends Sprite
 		_interp.variables.set("setBGColor", setBGColour);
 		_interp.variables.set("setPassageColor", setPassageColour);
 		_interp.variables.set("setMenuTextColor", setMenuTextColour);
+		_interp.variables.set("newLine", newLine);
 
 		_parser.allowJSON = true;
 		_parser.allowTypes = true;
@@ -613,7 +614,7 @@ class GameState extends Sprite
 		stage.addEventListener(MouseEvent.MOUSE_WHEEL, onScroll);
 	}
 
-	private function gotoPassage(id:Int = 0, ?refresh:Bool):Void
+	private function gotoPassage(id:Int = 0):Void
 	{
 		_parsedLinkCode = [];
 		_parsedLinkIndexes = [];
@@ -666,6 +667,11 @@ class GameState extends Sprite
 			}
 		}
 	}
+	
+	private function newLine():String
+	{
+		return "\n";
+	}
 
 	private function runCode(s:String):Void
 	{
@@ -691,6 +697,7 @@ class GameState extends Sprite
 	private function refreshPassage():Void 
 	{ 
 		_storyText.text = _storyString;
+		applyFormatting();
 	}
 	
 	private function show(s:String):Void
@@ -852,6 +859,7 @@ class GameState extends Sprite
 				break;
 			}
 		}
+		applyFormatting();
 	}
 	
 	private function callEvents():Void
@@ -860,6 +868,7 @@ class GameState extends Sprite
 		{
 			runCode(GameEvent.queuedEvents[i].code);
 		}
+		applyFormatting();
 	}
 	
 	private function transitionCharImage(x:Float, y:Float, width:Float, height:Float, time:Float):Void 

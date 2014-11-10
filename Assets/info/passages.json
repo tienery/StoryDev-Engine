@@ -43,7 +43,7 @@
 		{
 			"id":10,
 			"title": "Game Events",
-			"text": "appendLink('Start Event', 'startEvent(1);'); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1);');appendShow('\n\n'); appendLink('Stop Event', 'stopEvent(1);'); appendShow('\n\n'); appendLink('Refresh', 'gotoPassage(10)'); appendShow('\n\n');",
+			"text": "appendLink('Start Event', 'startEvent(1);'); appendShow('\n\n'); appendLink('Go Back', 'gotoPassage(1);');appendShow('\n\n'); appendLink('Stop Event', 'stopEvent(1);'); appendShow('\n\n'); appendLink('Refresh', 'gotoPassage(10)'); appendShow('\n\n'); appendLink('Call Event', 'gotoPassage(10);callEvent(0);');",
 			"htmlText": "Hello, there. This is the Game Events page.\n\nLet's see if this works. This page calls the event ID 0, which in turns starts ID 1.\n\nStarted Events are looped every time a new passage is displayed and the code is run. You can imagine being able to use a mission log or something similar to check variables for each passage.\n\n"
 		},
 		{
