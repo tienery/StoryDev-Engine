@@ -52,10 +52,17 @@ class GameState extends Sprite
 	private var _italicFormat:TextFormat;
 	
 	private var _textureQuality:Int;
+	private var _textureQualityUp:TextField;
+	private var _textureQualityDown:TextField;
 	private var _musicVolume:Int;
+	private var _musicVolumeUp:TextField;
+	private var _musicVolumeDown:TextField;
 	private var _sfxVolume:Int;
+	private var _sfxVolumeUp:TextField;
+	private var _sfxVolumeDown:TextField;
 	private var _vocalVolume:Int;
-	private var _videoVolume:Int;
+	private var _vocalVolumeUp:TextField;
+	private var _vocalVolumeDown:TextField;
 	private var _fullscreen:Bool;
 
 	private var _charImage:Bitmap;
@@ -126,7 +133,6 @@ class GameState extends Sprite
 		_musicVolume = 50;
 		_sfxVolume = 50;
 		_vocalVolume = 50;
-		_videoVolume = 50;
 		
 		Fonts.RegisterFonts();
 		
@@ -150,6 +156,8 @@ class GameState extends Sprite
 	{
 		stage.scaleMode = StageScaleMode.EXACT_FIT;
 	}
+	
+	private var _usingWheel:Bool;
 	
 	private function setupPauseMenu():Void
 	{
@@ -200,6 +208,32 @@ class GameState extends Sprite
 		_textureQualityText.addEventListener(MouseEvent.MOUSE_WHEEL, setQuality);
 		_textureQualityText.addEventListener(MouseEvent.MOUSE_OVER, onTextureHover);
 		
+		_textureQualityDown = new TextField();
+		_textureQualityDown.height = 30;
+		_textureQualityDown.width = 30;
+		_textureQualityDown.x = _textureQualityText.x + 310;
+		_textureQualityDown.y = 50;
+		_textureQualityDown.textColor = 0xFFFFFF;
+		_textureQualityDown.defaultTextFormat = _defaultFormat;
+		_textureQualityDown.defaultTextFormat.size = 20;
+		_textureQualityDown.text = "<";
+		_textureQualityDown.embedFonts = true;
+		_textureQualityDown.selectable = false;
+		_textureQualityDown.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setQualitySpecify(false); } );
+		
+		_textureQualityUp = new TextField();
+		_textureQualityUp.height = 30;
+		_textureQualityUp.width = 30;
+		_textureQualityUp.x = _textureQualityText.x + 345;
+		_textureQualityUp.y = 50;
+		_textureQualityUp.textColor = 0xFFFFFF;
+		_textureQualityUp.defaultTextFormat = _defaultFormat;
+		_textureQualityUp.defaultTextFormat.size = 20;
+		_textureQualityUp.text = ">";
+		_textureQualityUp.embedFonts = true;
+		_textureQualityUp.selectable = false;
+		_textureQualityUp.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setQualitySpecify(true); } );
+		
 		_musicVolumeText = new TextField();
 		_musicVolumeText.height = 30;
 		_musicVolumeText.width = 300;
@@ -213,6 +247,32 @@ class GameState extends Sprite
 		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
 		_musicVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setMusicVolume);
 		_musicVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
+		
+		_musicVolumeDown = new TextField();
+		_musicVolumeDown.height = 30;
+		_musicVolumeDown.width = 30;
+		_musicVolumeDown.x = _musicVolumeText.x + 310;
+		_musicVolumeDown.y = 85;
+		_musicVolumeDown.textColor = 0xFFFFFF;
+		_musicVolumeDown.defaultTextFormat = _defaultFormat;
+		_musicVolumeDown.defaultTextFormat.size = 20;
+		_musicVolumeDown.selectable = false;
+		_musicVolumeDown.embedFonts = true;
+		_musicVolumeDown.text = "<";
+		_musicVolumeDown.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setMusicVolumeSpecify(false); } );
+		
+		_musicVolumeUp = new TextField();
+		_musicVolumeUp.height = 30;
+		_musicVolumeUp.width = 30;
+		_musicVolumeUp.x = _musicVolumeText.x + 345;
+		_musicVolumeUp.y = 85;
+		_musicVolumeUp.textColor = 0xFFFFFF;
+		_musicVolumeUp.defaultTextFormat = _defaultFormat;
+		_musicVolumeUp.defaultTextFormat.size = 20;
+		_musicVolumeUp.selectable = false;
+		_musicVolumeUp.embedFonts = true;
+		_musicVolumeUp.text = ">";
+		_musicVolumeUp.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setMusicVolumeSpecify(true); } );
 		
 		_sfxVolumeText = new TextField();
 		_sfxVolumeText.height = 30;
@@ -228,6 +288,32 @@ class GameState extends Sprite
 		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setSFXVolume);
 		_sfxVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
 		
+		_sfxVolumeDown = new TextField();
+		_sfxVolumeDown.height = 30;
+		_sfxVolumeDown.width = 30;
+		_sfxVolumeDown.x = _sfxVolumeText.x + 310;
+		_sfxVolumeDown.y = 120;
+		_sfxVolumeDown.textColor = 0xFFFFFF;
+		_sfxVolumeDown.defaultTextFormat = _defaultFormat;
+		_sfxVolumeDown.defaultTextFormat.size = 20;
+		_sfxVolumeDown.selectable = false;
+		_sfxVolumeDown.embedFonts = true;
+		_sfxVolumeDown.text = "<";
+		_sfxVolumeDown.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setSFXVolumeSpecify(false); } );
+		
+		_sfxVolumeUp = new TextField();
+		_sfxVolumeUp.height = 30;
+		_sfxVolumeUp.width = 30;
+		_sfxVolumeUp.x = _sfxVolumeText.x + 345;
+		_sfxVolumeUp.y = 120;
+		_sfxVolumeUp.textColor = 0xFFFFFF;
+		_sfxVolumeUp.defaultTextFormat = _defaultFormat;
+		_sfxVolumeUp.defaultTextFormat.size = 20;
+		_sfxVolumeUp.selectable = false;
+		_sfxVolumeUp.embedFonts = true;
+		_sfxVolumeUp.text = ">";
+		_sfxVolumeUp.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setSFXVolumeSpecify(true); } );
+		
 		_vocalVolumeText = new TextField();
 		_vocalVolumeText.height = 30;
 		_vocalVolumeText.width = 300;
@@ -241,6 +327,32 @@ class GameState extends Sprite
 		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
 		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_WHEEL, setVocalVolume);
 		_vocalVolumeText.addEventListener(MouseEvent.MOUSE_OVER, onVolumeHover);
+		
+		_vocalVolumeDown = new TextField();
+		_vocalVolumeDown.height = 30;
+		_vocalVolumeDown.width = 30;
+		_vocalVolumeDown.x = _vocalVolumeText.x + 310;
+		_vocalVolumeDown.y = 155;
+		_vocalVolumeDown.textColor = 0xFFFFFF;
+		_vocalVolumeDown.defaultTextFormat = _defaultFormat;
+		_vocalVolumeDown.defaultTextFormat.size = 20;
+		_vocalVolumeDown.selectable = false;
+		_vocalVolumeDown.embedFonts = true;
+		_vocalVolumeDown.text = "<";
+		_vocalVolumeDown.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setVocalVolumeSpecify(false); } );
+		
+		_vocalVolumeUp = new TextField();
+		_vocalVolumeUp.height = 30;
+		_vocalVolumeUp.width = 30;
+		_vocalVolumeUp.x = _vocalVolumeText.x + 345;
+		_vocalVolumeUp.y = 155;
+		_vocalVolumeUp.textColor = 0xFFFFFF;
+		_vocalVolumeUp.defaultTextFormat = _defaultFormat;
+		_vocalVolumeUp.defaultTextFormat.size = 20;
+		_vocalVolumeUp.selectable = false;
+		_vocalVolumeUp.embedFonts = true;
+		_vocalVolumeUp.text = ">";
+		_vocalVolumeUp.addEventListener(MouseEvent.MOUSE_DOWN, function(e) { setVocalVolumeSpecify(true); } );
 		
 		_saveText = new TextField();
 		_saveText.height = 30;
@@ -394,9 +506,35 @@ class GameState extends Sprite
 		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
 	}
 	
+	private function setVocalVolumeSpecify(upOrDown:Bool):Void
+	{
+		if (upOrDown) _vocalVolume += 5;
+		else _vocalVolume -= 5;
+		
+		if (_vocalVolume > 100) _vocalVolume = 100;
+		if (_vocalVolume < 0) _vocalVolume = 0;
+		
+		Sm.modifyChannel(Sm.VOCAL_CHANNEL, _vocalVolume, 50);
+		
+		_vocalVolumeText.text = "Vocal Volume: " + _vocalVolume + "%";
+	}
+	
 	private function setSFXVolume(e:MouseEvent):Void
 	{
 		if (e.delta > 0) _sfxVolume += 5;
+		else _sfxVolume -= 5;
+		
+		if (_sfxVolume > 100) _sfxVolume = 100;
+		if (_sfxVolume < 0) _sfxVolume = 0;
+		
+		Sm.modifyChannel(Sm.SFX_CHANNEL, _sfxVolume, 50);
+		
+		_sfxVolumeText.text = "SFX Volume: " + _sfxVolume + "%";
+	}
+	
+	private function setSFXVolumeSpecify(upOrDown:Bool):Void
+	{
+		if (upOrDown) _sfxVolume += 5;
 		else _sfxVolume -= 5;
 		
 		if (_sfxVolume > 100) _sfxVolume = 100;
@@ -420,9 +558,47 @@ class GameState extends Sprite
 		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
 	}
 	
+	private function setMusicVolumeSpecify(upOrDown:Bool)
+	{
+		if (upOrDown) _musicVolume += 5;
+		else _musicVolume -= 5;
+		
+		if (_musicVolume > 100) _musicVolume = 100;
+		if (_musicVolume < 0) _musicVolume = 0;
+		
+		Sm.modifyChannel(Sm.MUSIC_CHANNEL, _musicVolume, 50);
+		
+		_musicVolumeText.text = "Music Volume: " + _musicVolume + "%";
+	}
+	
 	private function setQuality(e:MouseEvent):Void
 	{
 		if (e.delta > 0) _textureQuality++;
+		else _textureQuality--;
+		
+		if (_textureQuality > 3) _textureQuality = 3;
+		if (_textureQuality < 0) _textureQuality = 0;
+		
+		switch(_textureQuality) 
+		{
+			case 0:
+				stage.quality = StageQuality.LOW;
+			case 1:
+				stage.quality = StageQuality.MEDIUM;
+			case 2:
+				stage.quality = StageQuality.HIGH;
+			case 3:
+				#if flash
+				stage.quality = StageQuality.HIGH_16X16;
+				#end
+		}
+		
+		_textureQualityText.text = "Display Quality: " + getQualityInfo();
+	}
+	
+	private function setQualitySpecify(upOrDown:Bool):Void
+	{
+		if (upOrDown) _textureQuality++;
 		else _textureQuality--;
 		
 		if (_textureQuality > 3) _textureQuality = 3;
@@ -465,9 +641,17 @@ class GameState extends Sprite
 	{
 		removeChild(_helpOptionsText);
 		removeChild(_textureQualityText);
+		removeChild(_textureQualityDown);
+		removeChild(_textureQualityUp);
 		removeChild(_musicVolumeText);
+		removeChild(_musicVolumeUp);
+		removeChild(_musicVolumeDown);
 		removeChild(_sfxVolumeText);
+		removeChild(_sfxVolumeUp);
+		removeChild(_sfxVolumeDown);
 		removeChild(_vocalVolumeText);
+		removeChild(_vocalVolumeUp);
+		removeChild(_vocalVolumeDown);
 		removeChild(_saveText);
 		removeChild(_loadText);
 		removeChild(_returnHomeText);
@@ -479,12 +663,28 @@ class GameState extends Sprite
 		_helpOptionsText.textColor = 0xFFFFFF;
 		addChildAt(_textureQualityText, getChildIndex(_menuText));
 		_textureQualityText.textColor = 0xFFFFFF;
+		addChildAt(_textureQualityDown, getChildIndex(_menuText));
+		_textureQualityDown.textColor = 0xFFFFFF;
+		addChildAt(_textureQualityUp, getChildIndex(_menuText));
+		_textureQualityUp.textColor = 0xFFFFFF;
 		addChildAt(_musicVolumeText, getChildIndex(_menuText));
 		_musicVolumeText.textColor = 0xFFFFFF;
+		addChildAt(_musicVolumeDown, getChildIndex(_menuText));
+		_musicVolumeDown.textColor = 0xFFFFFF;
+		addChildAt(_musicVolumeUp, getChildIndex(_menuText));
+		_musicVolumeUp.textColor = 0xFFFFFF;
 		addChildAt(_sfxVolumeText, getChildIndex(_menuText));
 		_sfxVolumeText.textColor = 0xFFFFFF;
+		addChildAt(_sfxVolumeDown, getChildIndex(_menuText));
+		_sfxVolumeDown.textColor = 0xFFFFFF;
+		addChildAt(_sfxVolumeUp, getChildIndex(_menuText));
+		_sfxVolumeUp.textColor = 0xFFFFFF;
 		addChildAt(_vocalVolumeText, getChildIndex(_menuText));
 		_vocalVolumeText.textColor = 0xFFFFFF;
+		addChildAt(_vocalVolumeUp, getChildIndex(_menuText));
+		_vocalVolumeUp.textColor = 0xFFFFFF;
+		addChildAt(_vocalVolumeDown, getChildIndex(_menuText));
+		_vocalVolumeDown.textColor = 0xFFFFFF;
 		addChildAt(_saveText, getChildIndex(_menuText));
 		_saveText.textColor = 0xFFFFFF;
 		addChildAt(_loadText, getChildIndex(_menuText));
