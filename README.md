@@ -1,3 +1,5 @@
+This project is now obsolete and has been superseded by the new and much improved [StoryDev](https://github.com/storydev/StoryDev-Editor) editor, with more options and not restricted to Flash technology.
+
 StoryDev-Engine
 ===============
 This is going to be an interactive story engine, written in Haxe on the OpenFL framework. It is designed to make writing interactive stories easier in a user-friendly way for both the author and the programmer. The engine part of this product is almost done; all that needs to be done is corrections with custom links and it will be optimised for Flash and C++ targets (the main aim of this project).
@@ -27,9 +29,3 @@ If you wish, you can copy the following text into a TXT file (replacing anything
 Special Thanks to [Player-03](https://github.com/player-03) for his [Markdown Parser](https://github.com/player-03/MarkdownParser) which has helped solve the consist issues this project had with parsing and applying formatting to text and links.
 
 Thank you [MintPaw](https://github.com/MintPaw) for his help starting the project.
-
-DONATIONS
-=========
-Currently, this project will be free and open source. But to maintain this project, we may need the finances to not only establish a website, but also to stay alive. I thank anyone wishing to volunteer and help support this project. 
-
-Please make your donations to [Colour Multimedia Enterprises](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8CLJ92X3E5AF4) via PayPal - Your donations are entirely voluntary and refunds are not possible.
